@@ -1,5 +1,6 @@
 {%extends 'base.html'%}
 {% load static %}
+{% load humanize %}
 {% block content %}
 <div class="flex flex-col rounded-sm text-white bg-gray-50 p-5">
    <!-- head -->
@@ -66,9 +67,10 @@
    <div class="grid grid-cols-4 gap-3">
       <!-- sebelah kanan -->
       <div
-         class="bg-gradient-to-tl from-indigo-500 via-indigo-950 to-slate-800 col-span-3 overflow-hidden rounded-xl grid grid-cols-5 items-center">
-         <div class="flex items-center justify-between flex-col gap-6 bg-gradient-to-tl from-indigo-700 via-indigo-600 to-pink-200 p-6 col-span-2 h-full">
-            <div class="flex items-center justify-start gap-3 w-fit">
+         class="bg-gradient-to-tl from-indigo-500 via-indigo-950 to-slate-800 col-span-3 overflow-hidden rounded-xl grid grid-cols-5 items-center h-full">
+         <div
+            class="flex items-center flex-col gap-10 bg-gradient-to-tl from-indigo-700 via-indigo-600 to-pink-200 p-6 col-span-2 h-full">
+            <div class="flex items-center justify-start gap-3 mt-5 w-fit">
                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_44_87)">
                      <path
@@ -83,8 +85,9 @@
                </svg>
                <p class="text-xl">Tingkat Kecocokan dengan Aturan</p>
             </div>
-            <h1 class="text-9xl font-extrabold">{{ diagnosa_terakhir.akurasi | floatformat:0 }}%</h1>
-            <span class="px-3 py-1 rounded-full bg-indigo-300 text-indigo-900 font-medium">Masalah : {{ diagnosa_terakhir.kerusakan }}</span>
+            <h1 class="text-9xl font-extrabold">
+               {{ akurasi_rata_rata|floatformat:0 }}%
+            </h1>
          </div>
          <div class="group flex flex-col items-center justify-between gap-7 col-span-3 ">
             <div class="relative ">
@@ -96,19 +99,22 @@
                <span
                   class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-indigo-600 group-hover:bg-pink-600 text-white w-8 h-8 md:w-14 md:h-14 rounded-full flex items-center justify-center font-extrabold text-2 md:text-2xl drop-shadow-2xl -rotate-45 shadow-2xl shadow-indigo-500 group-hover:rotate-0 transition-all duration-300 ease-in-out">for</span>
             </div>
-            <!-- btn show modal diagnosa -->
-            <button id="btnOpenModal" type="button" class="flex justify-center items-center gap-2 text-white rounded-full bg-pink-600 py-4 px-6 font-bold text-xl shadow-2xl shadow-pink-500 group-hover:bg-indigo-600">
-               <svg width="18" height="25" viewBox="0 0 18 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                     d="M5.87145 25C5.73436 25.0001 5.59891 24.9697 5.47462 24.9108C5.35032 24.8519 5.2402 24.766 5.15199 24.6591C5.06377 24.5523 4.99961 24.427 4.964 24.2922C4.92839 24.1574 4.9222 24.0162 4.94587 23.8787V23.873L6.38333 15.834H0.818102C0.663628 15.8339 0.512315 15.7894 0.381663 15.7055C0.251012 15.6215 0.146361 15.5016 0.0798147 15.3597C0.0132683 15.2177 -0.0124546 15.0594 0.00562154 14.9032C0.0236977 14.7469 0.0848342 14.5991 0.18196 14.4768L11.3896 0.36626C11.5172 0.201336 11.6943 0.083505 11.8938 0.0307857C12.0934 -0.0219336 12.3044 -0.00663926 12.4946 0.07433C12.6848 0.155299 12.8437 0.297487 12.9471 0.479149C13.0504 0.660811 13.0925 0.871948 13.0669 1.08027C13.0669 1.0959 13.0628 1.111 13.0603 1.12663L11.6177 9.16774H17.1819C17.3364 9.16776 17.4877 9.21231 17.6183 9.29625C17.749 9.38019 17.8536 9.50008 17.9202 9.64205C17.9867 9.78403 18.0125 9.94229 17.9944 10.0985C17.9763 10.2548 17.9152 10.4026 17.818 10.5249L6.60884 24.6354C6.52077 24.7488 6.40872 24.8404 6.28105 24.9035C6.15338 24.9667 6.01337 24.9996 5.87145 25Z"
-                     fill="white" />
-               </svg>
-               Diagnosa Sekarang
-            </button>
-            
+            <!-- Tombol Buka Modal -->
+            <div class="flex justify-center ">
+               <button id="btnOpenModal" type="button"
+                  class="flex justify-center items-center gap-2 text-white rounded-full bg-pink-600 py-4 px-6 font-bold text-xl shadow-2xl shadow-pink-500 hover:bg-indigo-600">
+                  <svg width="18" height="25" viewBox="0 0 18 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M5.87145 25C5.73436 25.0001 5.59891 24.9697 5.47462 24.9108C5.35032 24.8519 5.2402 24.766 5.15199 24.6591C5.06377 24.5523 4.99961 24.427 4.964 24.2922C4.92839 24.1574 4.9222 24.0162 4.94587 23.8787V23.873L6.38333 15.834H0.818102C0.663628 15.8339 0.512315 15.7894 0.381663 15.7055C0.251012 15.6215 0.146361 15.5016 0.0798147 15.3597C0.0132683 15.2177 -0.0124546 15.0594 0.00562154 14.9032C0.0236977 14.7469 0.0848342 14.5991 0.18196 14.4768L11.3896 0.36626C11.5172 0.201336 11.6943 0.083505 11.8938 0.0307857C12.0934 -0.0219336 12.3044 -0.00663926 12.4946 0.07433C12.6848 0.155299 12.8437 0.297487 12.9471 0.479149C13.0504 0.660811 13.0925 0.871948 13.0669 1.08027C13.0669 1.0959 13.0628 1.111 13.0603 1.12663L11.6177 9.16774H17.1819C17.3364 9.16776 17.4877 9.21231 17.6183 9.29625C17.749 9.38019 17.8536 9.50008 17.9202 9.64205C17.9867 9.78403 18.0125 9.94229 17.9944 10.0985C17.9763 10.2548 17.9152 10.4026 17.818 10.5249L6.60884 24.6354C6.52077 24.7488 6.40872 24.8404 6.28105 24.9035C6.15338 24.9667 6.01337 24.9996 5.87145 25Z"
+                        fill="white" />
+                  </svg>
+                  Diagnosa Sekarang
+               </button>
+            </div>
+
          </div>
          <!-- solusi -->
-         <div class="w-full col-span-5">
+         <div class="w-full col-span-5 mb-5 ">
             <div class="flex justify-start items-center gap-3 p-6">
                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="19" cy="19" r="19" fill="white" />
@@ -125,34 +131,75 @@
                         <th scope="col" class="px-4 py-3">GEJALA</th>
                         <th scope="col" class="px-4 py-3">KERUSAKAN</th>
                         <th scope="col" class="px-8 py-3 text-center">SOLUSI</th>
-                        <th scope="col" class="px-4 py-3">STATUS</th>
-                        <th scope="col" class="px-4 py-3">TGL DIAGNOSA</th>
-                        <th scope="col" class="px-4 py-3">TGL UPDATE</th>
+                        <th scope="col" class="px-4 py-3">DESKRIPSI</th>
+                        <th scope="col" class="px-4 py-3">BIAYA PERBAIKAN</th>
+                        <th scope="col" class="px-4 py-3">WAKTU PERBAIKAN</th>
                      </tr>
                   </thead>
                   <tbody>
+                     {% for dk in diagnosa_terakhir.diagnosa_kerusakan.all %}
                      <tr class="border-b border-gray-300 bg-gray-50 hover:bg-gray-200">
                         <td class="px-4 py-2">
-                           <ul  class="list-disc"> 
+                           <ul class="list-disc pl-5">
                               {% for g in diagnosa_terakhir.gejala.all %}
-                              <li>{{ g.nama}}</li>
+                              <li>{{ g.nama }}</li>
+                              {% empty %}
+                              <li>Tidak ada gejala</li>
                               {% endfor %}
                            </ul>
                         </td>
-                        <td class="px-4 py-2">{{ diagnosa_terakhir.kerusakan }}</td>
-                        <td class="px-4 py-2 text-center text-pink-600 font-semibold">
-                           {{ diagnosa_terakhir.solusi }}
+                        <td class="px-4 py-2">
+                           {{ dk.kerusakan.nama_kerusakan }} ({{ dk.akurasi|floatformat:0 }}%)
                         </td>
-                        <td class="px-4 py-2">{{ diagnosa_terakhir.status }}</td>
-                        <td class="px-4 py-2">{{ diagnosa_terakhir.tanggal_diagnosa }}</td>
-                        <td class="px-4 py-2">{{ diagnosa_terakhir.updated_at }}</td>
+                        <td class="px-4 py-2 text-center text-pink-600 font-semibold">
+                           {% with solusi=dk.kerusakan.solusi_set.first %}
+                           {% if solusi %}
+                           {{ solusi.nama_solusi }}
+                           {% else %}
+                           Tidak ada solusi tersedia
+                           {% endif %}
+                           {% endwith %}
+                        </td>
+                        <td class="px-4 py-2">
+                           {% with solusi=dk.kerusakan.solusi_set.first %}
+                           {% if solusi %}
+                           {{ solusi.deskripsi }}
+                           {% else %}
+                           -
+                           {% endif %}
+                           {% endwith %}
+                        </td>
+                        <td class="px-4 py-2">
+                           {% with solusi=dk.kerusakan.solusi_set.first %}
+                           {% if solusi %}
+                           Rp {{ solusi.biaya_perbaikan|intcomma }}
+                           {% else %}
+                           -
+                           {% endif %}
+                           {% endwith %}
+                        </td>
+                        <td class="px-4 py-2">
+                           {% with solusi=dk.kerusakan.solusi_set.first %}
+                           {% if solusi %}
+                           {{ solusi.waktu_perbaikan }}
+                           {% else %}
+                           -
+                           {% endif %}
+                           {% endwith %}
+                        </td>
                      </tr>
+                     {% empty %}
+                     <tr class="border-b border-gray-300 bg-gray-50 hover:bg-gray-200">
+                        <td class="px-4 py-2" colspan="8">Belum ada diagnosa terakhir.</td>
+                     </tr>
+                     {% endfor %}
                   </tbody>
                </table>
             </div>
-            
+
          </div>
       </div>
+
       <!-- sebelah kiri -->
       <div class="bg-gradient-to-br from-indigo-500 via-indigo-950 to-slate-800 rounded-xl p-5">
 
@@ -160,26 +207,34 @@
          <div class="">
             <div class="flex items-center gap-3 font-medium text-md leading-5">
                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="19" cy="19" r="19" fill="white"/>
-                  <path d="M28.8738 20.8516V19.3634H25.1508V16.7157C26.5199 15.4157 26.64 13.7038 26.64 11.916V11.1719H25.1508V11.916C25.1508 13.2182 25.0642 14.1554 24.69 14.8851C23.6615 12.6601 21.6288 11.916 18.4493 11.916C16.5971 11.916 14.9502 12.2443 13.7756 13.0471C13.0821 13.521 12.6028 14.2056 12.2538 14.8944C11.841 14.1749 11.7479 13.2564 11.7479 11.916V11.1719H10.2587V11.916C10.2587 13.6573 10.3792 15.3278 11.7479 16.6226V19.3634H8.0249V20.8516L11.7479 20.8456C11.7479 21.7293 11.9201 23.3147 12.2314 24.0868C11.0312 25.1597 10.2587 26.348 10.2587 28.2869V29.0311H11.7479V28.2869C11.7479 27.0005 12.1714 26.2075 12.9658 25.435C13.9817 27.5428 14.7729 28.2869 17.7047 28.2869V14.8925H19.1939V28.2869C22.2189 28.2869 22.9169 27.5428 23.9329 25.435C24.7273 26.2075 25.1508 27.001 25.1508 28.2869V29.0311H26.64V28.2869C26.64 26.3485 25.8674 25.1602 24.6672 24.0868C24.9786 23.3147 25.1508 21.7293 25.1508 20.8456L28.8738 20.8516Z" fill="#534AED"/>
-                  <path d="M18.4495 8.18219C16.2242 8.18219 14.0044 8.18219 14.0044 12.1159C15.2138 11.4603 16.7525 11.1793 18.4495 11.1793C19.565 11.1793 20.5837 11.3034 21.4773 11.554C21.9751 11.6945 22.6192 11.9619 22.8947 12.1159C22.8947 8.18219 20.6749 8.18219 18.4495 8.18219Z" fill="#534AED"/>
+                  <circle cx="19" cy="19" r="19" fill="white" />
+                  <path
+                     d="M28.8738 20.8516V19.3634H25.1508V16.7157C26.5199 15.4157 26.64 13.7038 26.64 11.916V11.1719H25.1508V11.916C25.1508 13.2182 25.0642 14.1554 24.69 14.8851C23.6615 12.6601 21.6288 11.916 18.4493 11.916C16.5971 11.916 14.9502 12.2443 13.7756 13.0471C13.0821 13.521 12.6028 14.2056 12.2538 14.8944C11.841 14.1749 11.7479 13.2564 11.7479 11.916V11.1719H10.2587V11.916C10.2587 13.6573 10.3792 15.3278 11.7479 16.6226V19.3634H8.0249V20.8516L11.7479 20.8456C11.7479 21.7293 11.9201 23.3147 12.2314 24.0868C11.0312 25.1597 10.2587 26.348 10.2587 28.2869V29.0311H11.7479V28.2869C11.7479 27.0005 12.1714 26.2075 12.9658 25.435C13.9817 27.5428 14.7729 28.2869 17.7047 28.2869V14.8925H19.1939V28.2869C22.2189 28.2869 22.9169 27.5428 23.9329 25.435C24.7273 26.2075 25.1508 27.001 25.1508 28.2869V29.0311H26.64V28.2869C26.64 26.3485 25.8674 25.1602 24.6672 24.0868C24.9786 23.3147 25.1508 21.7293 25.1508 20.8456L28.8738 20.8516Z"
+                     fill="#534AED" />
+                  <path
+                     d="M18.4495 8.18219C16.2242 8.18219 14.0044 8.18219 14.0044 12.1159C15.2138 11.4603 16.7525 11.1793 18.4495 11.1793C19.565 11.1793 20.5837 11.3034 21.4773 11.554C21.9751 11.6945 22.6192 11.9619 22.8947 12.1159C22.8947 8.18219 20.6749 8.18219 18.4495 8.18219Z"
+                     fill="#534AED" />
                </svg>
                <p>Visualisasi Jenis,Gejala & Kerusakaan</p>
             </div>
             <div class="bg-white text-indigo-700 mt-3 p-3 rounded-xl">
                <!-- Pie Chart -->
-        <canvas id="pieChart" width="400" height="400"></canvas>
+               <canvas id="pieChart" width="400" height="400"></canvas>
             </div>
          </div>
          <!-- Kerusakan -->
          <div class="">
             <div class="flex items-center gap-3 font-medium text-md mt-3">
                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="19" cy="19" r="19" fill="white"/>
-                  <path d="M29.6163 12.6269L26.0431 16.1891L23.9024 14.0559L27.4756 10.495C25.483 9.52555 22.6879 9.52158 21.0332 11.1714C19.4768 12.7225 19.2825 15.1642 20.04 17.085L12.0972 24.9648C12.0479 25.0139 12.0088 25.0723 11.9821 25.1366C11.9554 25.2009 11.9417 25.2698 11.9417 25.3394C11.9417 25.409 11.9554 25.4779 11.9821 25.5422C12.0088 25.6064 12.0479 25.6648 12.0972 25.7139L14.4005 28.0102C14.4496 28.0595 14.508 28.0986 14.5723 28.1253C14.6365 28.152 14.7054 28.1657 14.775 28.1657C14.8446 28.1657 14.9136 28.152 14.9778 28.1253C15.0421 28.0986 15.1005 28.0595 15.1496 28.0102L23.0814 20.0563C24.9833 20.7706 27.3998 20.5693 28.9307 19.0428C30.5831 17.3926 30.5796 14.6213 29.6163 12.6269Z" fill="#534AED"/>
-                  <path d="M23.8134 21.3183L20.6482 24.491L23.9765 28.0128C24.0206 28.0596 24.0736 28.0972 24.1325 28.1231C24.1914 28.149 24.255 28.1629 24.3193 28.1637C24.3837 28.1646 24.4475 28.1525 24.5071 28.1281C24.5667 28.1038 24.6208 28.0677 24.6661 28.022L27.31 25.3578C27.3552 25.312 27.3909 25.2576 27.4149 25.1979C27.4389 25.1382 27.4507 25.0742 27.4497 25.0099C27.4487 24.9455 27.4349 24.882 27.4091 24.823C27.3833 24.7641 27.3461 24.7108 27.2995 24.6664L23.8134 21.3183ZM12.9535 17.0607C12.9535 16.8461 12.7772 16.6496 12.6252 16.4975L12.6142 16.487L12.5463 16.4222C12.5421 16.4174 12.5389 16.4118 12.5369 16.4057C12.5349 16.3997 12.5342 16.3933 12.5348 16.3869C12.6623 16.3152 12.8088 16.2844 12.9543 16.2988C13.0103 16.3045 13.2148 16.3385 13.5008 16.5152C13.6497 16.6073 14.9386 17.8473 15.4366 18.3086C15.3492 18.3999 15.301 18.5217 15.3021 18.6481C15.3033 18.7744 15.3537 18.8953 15.4427 18.985L15.7701 19.3314L18.6635 16.4596L18.2999 16.1142C18.2106 16.0248 18.0895 15.9744 17.9632 15.9739C17.8368 15.9734 17.7154 16.0229 17.6253 16.1115C16.6118 15.024 16.3474 14.5494 16.2593 14.2409C16.0645 13.5592 16.4417 13.0071 16.8762 12.6546C17.1335 12.451 17.6641 12.2985 18.1541 12.258C18.3251 12.2479 18.4966 12.2568 18.6657 12.2844C18.8186 12.3064 18.9433 12.3347 18.9913 12.3461C19.1576 12.3909 19.3198 12.4499 19.4761 12.5224L20.0048 11.6851C19.8416 11.4014 19.6432 11.1393 19.4144 10.9052C19.3405 10.8279 19.2642 10.7529 19.1857 10.6804C18.8428 10.3654 17.9518 9.83437 16.7801 9.83437C16.1034 9.83362 15.4332 9.96567 14.8073 10.223C13.1575 10.899 12.0805 11.8204 11.5857 12.3095L11.5826 12.3126C11.25 12.6468 10.9424 13.0048 10.662 13.3839C10.4263 13.7157 10.4519 14.0819 10.469 14.3242C10.469 14.3383 10.469 14.3537 10.4721 14.3683C10.3339 14.2682 10.1677 14.2142 9.9971 14.214C9.89141 14.2133 9.78664 14.2337 9.68895 14.2741C9.59125 14.3144 9.50261 14.3738 9.42821 14.4489L7.79779 16.0745C7.74171 16.1306 7.71021 16.2067 7.71021 16.286C7.71021 16.3653 7.74171 16.4414 7.79779 16.4975L10.5739 19.264C10.6294 19.3195 10.7047 19.3506 10.7832 19.3506C10.8617 19.3506 10.937 19.3195 10.9925 19.264L12.6256 17.6335C12.7772 17.482 12.9535 17.2748 12.9535 17.0607Z" fill="#534AED"/>
+                  <circle cx="19" cy="19" r="19" fill="white" />
+                  <path
+                     d="M29.6163 12.6269L26.0431 16.1891L23.9024 14.0559L27.4756 10.495C25.483 9.52555 22.6879 9.52158 21.0332 11.1714C19.4768 12.7225 19.2825 15.1642 20.04 17.085L12.0972 24.9648C12.0479 25.0139 12.0088 25.0723 11.9821 25.1366C11.9554 25.2009 11.9417 25.2698 11.9417 25.3394C11.9417 25.409 11.9554 25.4779 11.9821 25.5422C12.0088 25.6064 12.0479 25.6648 12.0972 25.7139L14.4005 28.0102C14.4496 28.0595 14.508 28.0986 14.5723 28.1253C14.6365 28.152 14.7054 28.1657 14.775 28.1657C14.8446 28.1657 14.9136 28.152 14.9778 28.1253C15.0421 28.0986 15.1005 28.0595 15.1496 28.0102L23.0814 20.0563C24.9833 20.7706 27.3998 20.5693 28.9307 19.0428C30.5831 17.3926 30.5796 14.6213 29.6163 12.6269Z"
+                     fill="#534AED" />
+                  <path
+                     d="M23.8134 21.3183L20.6482 24.491L23.9765 28.0128C24.0206 28.0596 24.0736 28.0972 24.1325 28.1231C24.1914 28.149 24.255 28.1629 24.3193 28.1637C24.3837 28.1646 24.4475 28.1525 24.5071 28.1281C24.5667 28.1038 24.6208 28.0677 24.6661 28.022L27.31 25.3578C27.3552 25.312 27.3909 25.2576 27.4149 25.1979C27.4389 25.1382 27.4507 25.0742 27.4497 25.0099C27.4487 24.9455 27.4349 24.882 27.4091 24.823C27.3833 24.7641 27.3461 24.7108 27.2995 24.6664L23.8134 21.3183ZM12.9535 17.0607C12.9535 16.8461 12.7772 16.6496 12.6252 16.4975L12.6142 16.487L12.5463 16.4222C12.5421 16.4174 12.5389 16.4118 12.5369 16.4057C12.5349 16.3997 12.5342 16.3933 12.5348 16.3869C12.6623 16.3152 12.8088 16.2844 12.9543 16.2988C13.0103 16.3045 13.2148 16.3385 13.5008 16.5152C13.6497 16.6073 14.9386 17.8473 15.4366 18.3086C15.3492 18.3999 15.301 18.5217 15.3021 18.6481C15.3033 18.7744 15.3537 18.8953 15.4427 18.985L15.7701 19.3314L18.6635 16.4596L18.2999 16.1142C18.2106 16.0248 18.0895 15.9744 17.9632 15.9739C17.8368 15.9734 17.7154 16.0229 17.6253 16.1115C16.6118 15.024 16.3474 14.5494 16.2593 14.2409C16.0645 13.5592 16.4417 13.0071 16.8762 12.6546C17.1335 12.451 17.6641 12.2985 18.1541 12.258C18.3251 12.2479 18.4966 12.2568 18.6657 12.2844C18.8186 12.3064 18.9433 12.3347 18.9913 12.3461C19.1576 12.3909 19.3198 12.4499 19.4761 12.5224L20.0048 11.6851C19.8416 11.4014 19.6432 11.1393 19.4144 10.9052C19.3405 10.8279 19.2642 10.7529 19.1857 10.6804C18.8428 10.3654 17.9518 9.83437 16.7801 9.83437C16.1034 9.83362 15.4332 9.96567 14.8073 10.223C13.1575 10.899 12.0805 11.8204 11.5857 12.3095L11.5826 12.3126C11.25 12.6468 10.9424 13.0048 10.662 13.3839C10.4263 13.7157 10.4519 14.0819 10.469 14.3242C10.469 14.3383 10.469 14.3537 10.4721 14.3683C10.3339 14.2682 10.1677 14.2142 9.9971 14.214C9.89141 14.2133 9.78664 14.2337 9.68895 14.2741C9.59125 14.3144 9.50261 14.3738 9.42821 14.4489L7.79779 16.0745C7.74171 16.1306 7.71021 16.2067 7.71021 16.286C7.71021 16.3653 7.74171 16.4414 7.79779 16.4975L10.5739 19.264C10.6294 19.3195 10.7047 19.3506 10.7832 19.3506C10.8617 19.3506 10.937 19.3195 10.9925 19.264L12.6256 17.6335C12.7772 17.482 12.9535 17.2748 12.9535 17.0607Z"
+                     fill="#534AED" />
                   </svg>
-                  
+
                <p>Visualisasi Data Diagnosa</p>
             </div>
             <div class="bg-white text-indigo-700 mt-3 p-3 rounded-xl">
@@ -194,32 +249,35 @@
          <div class="flex justify-between items-center">
             <div class="flex gap-3 items-center">
                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="19" cy="19" r="19" fill="white"/>
-                  <path d="M27.0893 17.4286H20.2143C19.5891 17.4286 18.9896 17.1802 18.5475 16.7382C18.1055 16.2961 17.8571 15.6966 17.8571 15.0714V8.19643C17.8571 8.14433 17.8364 8.09437 17.7996 8.05753C17.7628 8.0207 17.7128 8 17.6607 8H13.1429C12.3093 8 11.5099 8.33112 10.9205 8.92052C10.3311 9.50992 10 10.3093 10 11.1429V26.8571C10 27.6907 10.3311 28.4901 10.9205 29.0795C11.5099 29.6689 12.3093 30 13.1429 30H24.1429C24.9764 30 25.7758 29.6689 26.3652 29.0795C26.9546 28.4901 27.2857 27.6907 27.2857 26.8571V17.625C27.2857 17.5729 27.265 17.5229 27.2282 17.4861C27.1913 17.4493 27.1414 17.4286 27.0893 17.4286ZM22.5714 25.2857H14.7143C14.5059 25.2857 14.3061 25.2029 14.1587 25.0556C14.0114 24.9082 13.9286 24.7084 13.9286 24.5C13.9286 24.2916 14.0114 24.0918 14.1587 23.9444C14.3061 23.7971 14.5059 23.7143 14.7143 23.7143H22.5714C22.7798 23.7143 22.9797 23.7971 23.127 23.9444C23.2744 24.0918 23.3571 24.2916 23.3571 24.5C23.3571 24.7084 23.2744 24.9082 23.127 25.0556C22.9797 25.2029 22.7798 25.2857 22.5714 25.2857ZM22.5714 21.3571H14.7143C14.5059 21.3571 14.3061 21.2744 14.1587 21.127C14.0114 20.9797 13.9286 20.7798 13.9286 20.5714C13.9286 20.363 14.0114 20.1632 14.1587 20.0158C14.3061 19.8685 14.5059 19.7857 14.7143 19.7857H22.5714C22.7798 19.7857 22.9797 19.8685 23.127 20.0158C23.2744 20.1632 23.3571 20.363 23.3571 20.5714C23.3571 20.7798 23.2744 20.9797 23.127 21.127C22.9797 21.2744 22.7798 21.3571 22.5714 21.3571Z" fill="#534AED"/>
-                  <path d="M26.658 15.6897L19.5959 8.62759C19.5822 8.61394 19.5647 8.60465 19.5457 8.60089C19.5267 8.59714 19.507 8.59908 19.4892 8.60648C19.4713 8.61388 19.4559 8.62641 19.4451 8.64248C19.4344 8.65856 19.4285 8.67747 19.4285 8.69683V15.0714C19.4285 15.2798 19.5112 15.4797 19.6586 15.627C19.8059 15.7744 20.0058 15.8571 20.2142 15.8571H26.5888C26.6081 15.8571 26.6271 15.8513 26.6431 15.8405C26.6592 15.8297 26.6717 15.8144 26.6791 15.7965C26.6865 15.7786 26.6885 15.7589 26.6847 15.7399C26.681 15.7209 26.6717 15.7034 26.658 15.6897Z" fill="#534AED"/>
+                  <circle cx="19" cy="19" r="19" fill="white" />
+                  <path
+                     d="M27.0893 17.4286H20.2143C19.5891 17.4286 18.9896 17.1802 18.5475 16.7382C18.1055 16.2961 17.8571 15.6966 17.8571 15.0714V8.19643C17.8571 8.14433 17.8364 8.09437 17.7996 8.05753C17.7628 8.0207 17.7128 8 17.6607 8H13.1429C12.3093 8 11.5099 8.33112 10.9205 8.92052C10.3311 9.50992 10 10.3093 10 11.1429V26.8571C10 27.6907 10.3311 28.4901 10.9205 29.0795C11.5099 29.6689 12.3093 30 13.1429 30H24.1429C24.9764 30 25.7758 29.6689 26.3652 29.0795C26.9546 28.4901 27.2857 27.6907 27.2857 26.8571V17.625C27.2857 17.5729 27.265 17.5229 27.2282 17.4861C27.1913 17.4493 27.1414 17.4286 27.0893 17.4286ZM22.5714 25.2857H14.7143C14.5059 25.2857 14.3061 25.2029 14.1587 25.0556C14.0114 24.9082 13.9286 24.7084 13.9286 24.5C13.9286 24.2916 14.0114 24.0918 14.1587 23.9444C14.3061 23.7971 14.5059 23.7143 14.7143 23.7143H22.5714C22.7798 23.7143 22.9797 23.7971 23.127 23.9444C23.2744 24.0918 23.3571 24.2916 23.3571 24.5C23.3571 24.7084 23.2744 24.9082 23.127 25.0556C22.9797 25.2029 22.7798 25.2857 22.5714 25.2857ZM22.5714 21.3571H14.7143C14.5059 21.3571 14.3061 21.2744 14.1587 21.127C14.0114 20.9797 13.9286 20.7798 13.9286 20.5714C13.9286 20.363 14.0114 20.1632 14.1587 20.0158C14.3061 19.8685 14.5059 19.7857 14.7143 19.7857H22.5714C22.7798 19.7857 22.9797 19.8685 23.127 20.0158C23.2744 20.1632 23.3571 20.363 23.3571 20.5714C23.3571 20.7798 23.2744 20.9797 23.127 21.127C22.9797 21.2744 22.7798 21.3571 22.5714 21.3571Z"
+                     fill="#534AED" />
+                  <path
+                     d="M26.658 15.6897L19.5959 8.62759C19.5822 8.61394 19.5647 8.60465 19.5457 8.60089C19.5267 8.59714 19.507 8.59908 19.4892 8.60648C19.4713 8.61388 19.4559 8.62641 19.4451 8.64248C19.4344 8.65856 19.4285 8.67747 19.4285 8.69683V15.0714C19.4285 15.2798 19.5112 15.4797 19.6586 15.627C19.8059 15.7744 20.0058 15.8571 20.2142 15.8571H26.5888C26.6081 15.8571 26.6271 15.8513 26.6431 15.8405C26.6592 15.8297 26.6717 15.8144 26.6791 15.7965C26.6865 15.7786 26.6885 15.7589 26.6847 15.7399C26.681 15.7209 26.6717 15.7034 26.658 15.6897Z"
+                     fill="#534AED" />
                </svg>
-               <p class="font-semibold">History Diagnosa</p>               
+               <p class="font-semibold">History Diagnosa</p>
             </div>
             <button type="button" id="delete_checkbok"
                class="text-white bg-indigo-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center items-center hover:bg-red-600 focus:ring-gray-600  flex gap-1">
                Delete All Check
             </button>
-         
+
          </div>
 
          <table class="w-full text-sm text-left rtl:text-right text-gray-700 border-collapse rounded-full mt-4 p-3">
             <thead class="text-base uppercase bg-slate-100 text-indigo-600 ">
                <tr>
                   <th scope="col" class="px-4 py-3 text-center">NO</th>
+                  <th scope="col" class="px-4 py-3">JENIS</th>
                   <th scope="col" class="px-4 py-3">GEJALA</th>
-                  <th scope="col" class="px-4 py-3">KERUSAKAN</th>
                   <th scope="col" class="px-8 py-3 text-center">SOLUSI</th>
-                  <th scope="col" class="px-4 py-3">STATUS</th>
-                  <th scope="col" class="px-4 py-3">AKURASI</th>
                   <th scope="col" class="px-4 py-3">TGL DIAGNOSA</th>
                   <th scope="col" class="px-4 py-3">TGL UPDATE </th>
                   <th scope="col" class="px-5">
-                     <input id="checkAll" type="checkbox" class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+                     <input id="checkAll" type="checkbox"
+                        class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
                   </th>
                </tr>
             </thead>
@@ -227,23 +285,20 @@
                {% for data in diagnosa %}
                <tr class="border-b border-gray-300 bg-gray-50 hover:bg-gray-200">
                   <td class="px-4 py-2 text-center font-semibold">{{ forloop.counter}}</td>
+                  <td class="px-4 py-2">{{ data.jenis_elektronik }}</td>
                   <td class="px-4 py-2">
-                     <ul  class="list-disc"> 
+                     <ul class="list-disc">
                         {% for g in data.gejala.all %}
                         <li>{{ g.nama}}</li>
                         {% endfor %}
                      </ul>
                   </td>
-                  <td class="px-4 py-2">{{ data.kerusakan }}</td>
-                  <td class="px-4 py-2 text-center font-semibold">
-                    <span class="bg-indigo-600 px-3 py-1 text-white rounded-full"> {{ data.solusi }}</span>
-                  </td>
-                  <td class="px-4 py-2">{{ data.status }}</td>
-                  <td class="px-4 py-2">{{ data.akurasi }}</td>
+                  <td class="px-4 py-2">{{ data.solusi}}</td>
                   <td class="px-4 py-2">{{ data.tanggal_diagnosa }}</td>
                   <td class="px-4 py-2">{{ data.updated_at }} </td>
                   <td class="px-5">
-                     <input type="checkbox" value="{{ data.id }}" class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+                     <input type="checkbox" value="{{ data.id }}"
+                        class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
                   </td>
                </tr>
                {% endfor %}
@@ -254,38 +309,33 @@
 
    <!-- Modal Diagnosa -->
    <div id="modalDiagnosa" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-      <div class="bg-slate-800 p-6 rounded-lg w-1/2 shadow-lg">
+      <div class="bg-slate-800 p-6 rounded-lg w-1/2 shadow-lg text-white">
          <h2 class="text-xl font-bold mb-4 text-center">Diagnosa Kerusakan</h2>
 
          <!-- Pilih Jenis Elektronik -->
          <div class="mb-3">
             <label for="jenis_elektronik" class="block font-semibold">Pilih Jenis Elektronik:</label>
             <select id="jenis_elektronik_dropdown" class="w-full p-2 border border-gray-300 rounded text-slate-800">
-                  <option value="">-- Pilih --</option>
-                  <!-- Data akan di-load dari backend -->
+               <option value="">-- Pilih --</option>
             </select>
          </div>
 
          <!-- Daftar Gejala -->
          <div id="gejala-container" class="mb-4">
             <p class="font-semibold">Pilih Gejala yang Dialami:</p>
-            <div id="gejala-list" class="max-h-40 overflow-y-auto border p-2 rounded">
-                  <!-- Checkbox gejala akan di-load dari backend -->
-            </div>
+            <div id="gejala-list" class="max-h-40 overflow-y-auto border p-2 rounded bg-gray-700"></div>
          </div>
 
          <!-- Tombol Diagnosa -->
          <div class="flex justify-between">
-            <button id="btnDiagnosa" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Diagnosa</button>
-            <button id="btnCloseModal" class="bg-gray-400 text-white px-4 py-2 rounded ml-2">Tutup</button>
+            <button id="btnDiagnosa" class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Diagnosa</button>
+            <button id="btnCloseModal" class="bg-gray-400 text-white px-4 py-2 rounded ml-2 hover:bg-gray-500">Tutup</button>
          </div>
 
          <!-- Hasil Diagnosa -->
          <div id="hasil-diagnosa" class="hidden mt-4 p-4 border rounded bg-gray-100 text-slate-800">
             <h3 class="text-lg font-bold">Hasil Diagnosa</h3>
-            <p id="hasil-kerusakan" class="mt-2"></p>
-            <p id="akurasi" class="mt-1 font-semibold"></p>
-            <p id="solusi" class="mt-2"></p>
+            <div id="hasil-kerusakan" class="mt-2"></div>
          </div>
       </div>
    </div>
@@ -296,7 +346,8 @@
       {% for message in messages %}
       {% if message.tags == 'success' %}
       <div id="toast-success"
-         class="flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow-sm text-green-900 bg-green-500" role="alert">
+         class="flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow-sm text-green-900 bg-green-500"
+         role="alert">
          <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 rounded-lg bg-green-800 text-green-200">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                viewBox="0 0 20 20">
@@ -350,183 +401,202 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
    document.addEventListener("DOMContentLoaded", function () {
-       // Ambil data dari backend
-       fetch("api/diagnosis-visualization/")
-           .then(response => response.json())
-           .then(data => {
-               const ctx = document.getElementById('pieChartdiagnosa').getContext('2d');
-   
-               // Buat grafik pie
-               new Chart(ctx, {
-                   type: 'pie',
-                   data: {
-                       labels: data.labels, // Label jenis elektronik
-                       datasets: [{
-                           label: 'Jumlah Diagnosa',
-                           data: data.data, // Jumlah diagnosa untuk setiap jenis elektronik
-                           backgroundColor: ['#534AED', '#901CE3', '#FFCE56', '#4BC0C0', '#9966FF'],
-                           hoverBackgroundColor: ['#534AED', '#901CE3', '#FFCE56', '#4BC0C0', '#9966FF']
-                       }]
-                   },
-                   options: {
-                       responsive: true,
-                       plugins: {
-                           legend: {
-                               position: 'bottom',
-                           },
-                           tooltip: {
-                               callbacks: {
-                                   label: function (tooltipItem) {
-                                       return `${tooltipItem.label}: ${tooltipItem.raw}`;
-                                   }
-                               }
+      // Ambil data dari backend
+      fetch("api/diagnosis-visualization/")
+         .then(response => response.json())
+         .then(data => {
+            const ctx = document.getElementById('pieChartdiagnosa').getContext('2d');
+
+            // Buat grafik pie
+            new Chart(ctx, {
+               type: 'pie',
+               data: {
+                  labels: data.labels, // Label jenis elektronik
+                  datasets: [{
+                     label: 'Jumlah Diagnosa',
+                     data: data.data, // Jumlah diagnosa untuk setiap jenis elektronik
+                     backgroundColor: ['#534AED', '#901CE3', '#FFCE56', '#4BC0C0', '#9966FF'],
+                     hoverBackgroundColor: ['#534AED', '#901CE3', '#FFCE56', '#4BC0C0', '#9966FF']
+                  }]
+               },
+               options: {
+                  responsive: true,
+                  plugins: {
+                     legend: {
+                        position: 'bottom',
+                     },
+                     tooltip: {
+                        callbacks: {
+                           label: function (tooltipItem) {
+                              return `${tooltipItem.label}: ${tooltipItem.raw}`;
                            }
-                       }
-                   }
-               });
-           });
+                        }
+                     }
+                  }
+               }
+            });
+         });
    });
 </script>
 <!-- chart -->
 <script>
    document.addEventListener("DOMContentLoaded", function () {
-       // Ambil data dari backend
-       fetch("api/visualization/")
-           .then(response => response.json())
-           .then(data => {
-               const ctx = document.getElementById('pieChart').getContext('2d');
-   
-               // Buat grafik pie
-               new Chart(ctx, {
-                   type: 'pie',
-                   data: {
-                       labels: ['Jenis Elektronik', 'Gejala', 'Kerusakan'],
-                       datasets: [{
-                           label: 'Jumlah',
-                           data: [data.jenis_elektronik, data.gejala, data.kerusakan],
-                           backgroundColor: ['#EE1F91', '#901CE3', '#534AED'],
-                           hoverBackgroundColor: ['#EE1F91', '#901CE3', '#534AED']
-                       }]
-                   },
-                   options: {
-                       responsive: true,
-                       plugins: {
-                           legend: {
-                               position: 'bottom',
-                           },
-                           tooltip: {
-                               callbacks: {
-                                   label: function (tooltipItem) {
-                                       return `${tooltipItem.label}: ${tooltipItem.raw}`;
-                                   }
-                               }
+      // Ambil data dari backend
+      fetch("api/visualization/")
+         .then(response => response.json())
+         .then(data => {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+
+            // Buat grafik pie
+            new Chart(ctx, {
+               type: 'pie',
+               data: {
+                  labels: ['Jenis Elektronik', 'Gejala', 'Kerusakan'],
+                  datasets: [{
+                     label: 'Jumlah',
+                     data: [data.jenis_elektronik, data.gejala, data.kerusakan],
+                     backgroundColor: ['#EE1F91', '#901CE3', '#534AED'],
+                     hoverBackgroundColor: ['#EE1F91', '#901CE3', '#534AED']
+                  }]
+               },
+               options: {
+                  responsive: true,
+                  plugins: {
+                     legend: {
+                        position: 'bottom',
+                     },
+                     tooltip: {
+                        callbacks: {
+                           label: function (tooltipItem) {
+                              return `${tooltipItem.label}: ${tooltipItem.raw}`;
                            }
-                       }
-                   }
-               });
-           });
+                        }
+                     }
+                  }
+               }
+            });
+         });
    });
 </script>
 
 <!-- diagnosa -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const modal = document.getElementById("modalDiagnosa");
-    const btnOpenModal = document.getElementById("btnOpenModal");
-    const btnCloseModal = document.getElementById("btnCloseModal");
-    const jenisElektronikDropdown = document.getElementById("jenis_elektronik_dropdown");
-    const gejalaList = document.getElementById("gejala-list");
-    const btnDiagnosa = document.getElementById("btnDiagnosa");
-    const hasilDiagnosa = document.getElementById("hasil-diagnosa");
-    const hasilKerusakan = document.getElementById("hasil-kerusakan");
-    const akurasi = document.getElementById("akurasi");
-    const solusi = document.getElementById("solusi");
+   const modal = document.getElementById("modalDiagnosa");
+   const btnOpenModal = document.getElementById("btnOpenModal");
+   const btnCloseModal = document.getElementById("btnCloseModal");
+   const jenisElektronikDropdown = document.getElementById("jenis_elektronik_dropdown");
+   const gejalaList = document.getElementById("gejala-list");
+   const btnDiagnosa = document.getElementById("btnDiagnosa");
+   const hasilDiagnosa = document.getElementById("hasil-diagnosa");
+   const hasilKerusakan = document.getElementById("hasil-kerusakan");
 
-    // Buka modal
-    btnOpenModal.addEventListener("click", function () {
-        modal.classList.remove("hidden");
-        loadJenisElektronik();
-    });
+   // Buka modal
+   btnOpenModal.addEventListener("click", function () {
+      modal.classList.remove("hidden");
+      loadJenisElektronik();
+   });
 
-    // Tutup modal
-    btnCloseModal.addEventListener("click", function () {
-        window.location.reload();
-        modal.classList.add("hidden");
-        resetForm();
-    });
+   // Tutup modal
+   btnCloseModal.addEventListener("click", function () {
+      modal.classList.add("hidden");
+      window.location.reload();
+      resetForm();
+   });
 
-    // Load jenis elektronik
-    function loadJenisElektronik() {
-        fetch("api/jenis-elektronik/")
+   // Load jenis elektronik
+   function loadJenisElektronik() {
+      fetch("api/jenis-elektronik/")
+         .then(response => response.json())
+         .then(data => {
+            jenisElektronikDropdown.innerHTML = '<option value="">-- Pilih --</option>';
+            data.forEach(item => {
+               const option = document.createElement("option");
+               option.value = item.id;
+               option.textContent = item.nama;
+               jenisElektronikDropdown.appendChild(option);
+            });
+         })
+         .catch(error => console.error("Error loading jenis elektronik:", error));
+   }
+
+   // Load gejala berdasarkan jenis elektronik
+   jenisElektronikDropdown.addEventListener("change", function () {
+      const jenisId = jenisElektronikDropdown.value;
+      if (jenisId) {
+         fetch(`api/gejala/${jenisId}/`)
             .then(response => response.json())
             .then(data => {
-                jenisElektronikDropdown.innerHTML = '<option value="">-- Pilih --</option>';
-                data.forEach(item => {
-                    const option = document.createElement("option");
-                    option.value = item.id;
-                    option.textContent = item.nama;
-                    jenisElektronikDropdown.appendChild(option);
-                });
-            });
-    }
+               gejalaList.innerHTML = "";
+               data.forEach(item => {
+                  const label = document.createElement("label");
+                  label.className = "flex items-center space-x-2 text-white";
+                  const checkbox = document.createElement("input");
+                  checkbox.type = "checkbox";
+                  checkbox.value = item.id;
+                  checkbox.className = "mr-2";
+                  label.appendChild(checkbox);
+                  label.appendChild(document.createTextNode(item.nama));
+                  gejalaList.appendChild(label);
+               });
+            })
+            .catch(error => console.error("Error loading gejala:", error));
+      } else {
+         gejalaList.innerHTML = "";
+      }
+   });
 
-    // Load gejala berdasarkan jenis elektronik
-    jenisElektronikDropdown.addEventListener("change", function () {
-        const jenisId = jenisElektronikDropdown.value;
-        if (jenisId) {
-            fetch(`api/gejala/${jenisId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    gejalaList.innerHTML = "";
-                    data.forEach(item => {
-                        const label = document.createElement("label");
-                        label.className = "flex items-center space-x-2";
-                        const checkbox = document.createElement("input");
-                        checkbox.type = "checkbox";
-                        checkbox.value = item.id;
-                        checkbox.className = "mr-2";
-                        label.appendChild(checkbox);
-                        label.appendChild(document.createTextNode(item.nama));
-                        gejalaList.appendChild(label);
-                    });
-                });
-        } else {
-            gejalaList.innerHTML = "";
-        }
-    });
+   // Proses diagnosa
+   btnDiagnosa.addEventListener("click", function () {
+      const jenisId = jenisElektronikDropdown.value;
+      const selectedGejala = Array.from(gejalaList.querySelectorAll("input[type='checkbox']:checked"))
+         .map(checkbox => checkbox.value);
 
-    // Proses diagnosa
-    btnDiagnosa.addEventListener("click", function () {
-        const jenisId = jenisElektronikDropdown.value;
-        const selectedGejala = Array.from(gejalaList.querySelectorAll("input[type='checkbox']:checked"))
-            .map(checkbox => checkbox.value);
+      if (!jenisId || selectedGejala.length === 0) {
+         alert("Silakan pilih jenis elektronik dan gejala terlebih dahulu.");
+         return;
+      }
 
-        if (!jenisId || selectedGejala.length === 0) {
-            alert("Silakan pilih jenis elektronik dan gejala terlebih dahulu.");
-            return;
-        }
+      fetch("api/diagnosa/", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ jenis_id: jenisId, gejala: selectedGejala })
+      })
+         .then(response => response.json())
+         .then(data => {
+            hasilKerusakan.innerHTML = "";
+            if (data.kerusakan === "Tidak ditemukan") {
+               hasilKerusakan.innerHTML = `
+                        <p class="font-semibold">Kerusakan: ${data.kerusakan}</p>
+                        <p>Akurasi: ${data.akurasi}%</p>
+                        <p>Solusi: ${data.solusi}</p>
+                     `;
+            } else {
+               data.kerusakan.forEach(k => {
+                  hasilKerusakan.innerHTML += `
+                              <div class="mb-2">
+                                 <p class="font-semibold">Kerusakan: ${k.nama}</p>
+                                 <p>Akurasi: ${k.akurasi}%</p>
+                                 <p>Solusi: ${k.solusi}</p>
+                              </div>
+                              <hr class="my-2">
+                        `;
+               });
+            }
 
-        fetch("api/diagnosa/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ jenis_id: jenisId, gejala: selectedGejala })
-        })
-            .then(response => response.json())
-            .then(data => {
-                hasilKerusakan.textContent = `Kerusakan: ${data.kerusakan}`;
-                akurasi.textContent = `Akurasi: ${data.akurasi}%`;
-                solusi.textContent = `Solusi: ${data.solusi}`;
-                hasilDiagnosa.classList.remove("hidden");
-            });
-    });
+            hasilDiagnosa.classList.remove("hidden");
+         })
+         .catch(error => console.error("Error during diagnosis:", error));
+   });
 
-    // Reset form
-    function resetForm() {
-        jenisElektronikDropdown.value = "";
-        gejalaList.innerHTML = "";
-        hasilDiagnosa.classList.add("hidden");
-    }
-});  
+   // Reset form
+   function resetForm() {
+      jenisElektronikDropdown.value = "";
+      gejalaList.innerHTML = "";
+      hasilDiagnosa.classList.add("hidden");
+      hasilKerusakan.innerHTML = "";
+   }
+});
 </script>
 
 <!-- delete -->

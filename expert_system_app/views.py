@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from .models import JenisElektronik, Gejala, Kerusakan, Aturan, Diagnosa, Solusi
+from .models import JenisElektronik, Gejala, Kerusakan, Aturan, Diagnosa,DiagnosaKerusakan, Solusi
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models import Count
 from datetime import datetime, timedelta
+from django.db import models
 
 def get_diagnosis_pie_data(request):
     # Hitung jumlah diagnosa untuk setiap jenis elektronik
@@ -50,7 +51,7 @@ def get_jenis_elektronik(request):
 def get_gejala(request, jenis_id):
     gejala_list = Gejala.objects.filter(jenis_elektronik_id=jenis_id).values("id", "nama")
     return JsonResponse(list(gejala_list), safe=False)
-        
+
 @csrf_exempt
 def diagnose(request):
     if request.method == "POST":
@@ -58,58 +59,98 @@ def diagnose(request):
         jenis_id = data.get("jenis_id")
         gejala_ids = data.get("gejala", [])
 
-        # Cari aturan yang cocok berdasarkan gejala yang dipilih
-        aturan_terkait = Aturan.objects.filter(
-            jenis_elektronik_id=jenis_id,
-            gejala__id__in=gejala_ids
-        ).annotate(matched_count=Count('gejala')).filter(matched_count=len(gejala_ids))
+        # Validasi input
+        if not jenis_id or not gejala_ids:
+            return JsonResponse({"error": "Jenis elektronik dan gejala harus dipilih"}, status=400)
 
-        if aturan_terkait.exists():
-            aturan = aturan_terkait.first()
-            kerusakan = aturan.kerusakan
+        # Inisialisasi fakta awal
+        fakta_gejala = set(gejala_ids)
+        fakta_kerusakan = set()
+        hasil_diagnosa = {}
 
-            # Hitung akurasi
-            total_gejala_aturan = aturan.gejala.count()
-            matched_gejala = aturan.gejala.filter(id__in=gejala_ids).count()
-            akurasi = round((matched_gejala / total_gejala_aturan) * 100, 2) if total_gejala_aturan > 0 else 0
-
-            # Ambil solusi yang direkomendasikan
-            solusi_recommended = Solusi.objects.filter(kerusakan=kerusakan, is_recommended=True).first()
-            solusi_text = solusi_recommended.nama_solusi if solusi_recommended else "Tidak ada solusi yang tersedia"
-
-            # Simpan hasil diagnosa ke tabel Diagnosa
-            diagnosa = Diagnosa.objects.create(
-                jenis_elektronik_id=jenis_id,
-                kerusakan=kerusakan,
-                akurasi=akurasi,  # Simpan akurasi dalam bentuk desimal (misalnya 0.95)
-                catatan=f"Diagnosa otomatis dengan solusi: {solusi_text}",
-                solusi=solusi_text  # Simpan solusi ke tabel Diagnosa
+        # Iterasi Forward Chaining
+        while True:
+            aturan_terkait = Aturan.objects.filter(
+                jenis_elektronik_id=jenis_id
+            ).annotate(
+                matched_gejala=Count('gejala', filter=models.Q(gejala__id__in=fakta_gejala), distinct=True),
+                matched_kerusakan=Count('kerusakan_sebelumnya', filter=models.Q(kerusakan_sebelumnya__id__in=fakta_kerusakan), distinct=True),
+                total_fakta=Count('gejala') + Count('kerusakan_sebelumnya')
+            ).filter(
+                models.Q(matched_gejala__gt=0) | models.Q(matched_kerusakan__gt=0)
             )
-            diagnosa.gejala.set(gejala_ids)  # Hubungkan gejala yang dipilih
 
-            return JsonResponse({
-                "kerusakan": kerusakan.nama_kerusakan,
-                "akurasi": akurasi,
-                "solusi": solusi_text
-            })
-        else:
-            # Simpan diagnosa meskipun tidak ditemukan kerusakan
-            solusi_text = "Tidak ada solusi yang tersedia"
+            if not aturan_terkait.exists():
+                break
+
+            baru_ditemukan = False
+            for aturan in aturan_terkait:
+                kerusakan = aturan.kerusakan
+                if kerusakan.id not in fakta_kerusakan and kerusakan.id not in hasil_diagnosa:
+                    total_fakta_aturan = aturan.total_fakta
+                    matched_fakta = aturan.matched_gejala + aturan.matched_kerusakan
+                    akurasi = round((matched_fakta / total_fakta_aturan) * 100, 2) if total_fakta_aturan > 0 else 0
+
+                    hasil_diagnosa[kerusakan.id] = {
+                        "nama": kerusakan.nama_kerusakan,
+                        "akurasi": akurasi,
+                        "solusi": None
+                    }
+                    fakta_kerusakan.add(kerusakan.id)
+                    baru_ditemukan = True
+
+            if not baru_ditemukan:
+                break
+
+        # Proses hasil diagnosa
+        if hasil_diagnosa:
+            kerusakan_ids = list(hasil_diagnosa.keys())
+            solusi_dict = {s.kerusakan_id: s.nama_solusi for s in Solusi.objects.filter(kerusakan__id__in=kerusakan_ids, is_recommended=True)}
+
+            # Isi solusi untuk setiap kerusakan
+            for kerusakan_id, info in hasil_diagnosa.items():
+                info["solusi"] = solusi_dict.get(kerusakan_id, "Tidak ada solusi yang tersedia")
+
+            # Simpan diagnosa
             diagnosa = Diagnosa.objects.create(
                 jenis_elektronik_id=jenis_id,
-                kerusakan=None,
-                akurasi=0.0,
-                catatan="Tidak ditemukan kerusakan",
-                solusi=solusi_text  # Simpan solusi ke tabel Diagnosa
+                catatan="Diagnosa otomatis dengan multiple kerusakan",
+                solusi=" - ".join([f"{v['nama']}: {v['solusi']}" for v in hasil_diagnosa.values()])
+            )
+            diagnosa.gejala.set(gejala_ids)
+
+            # Simpan relasi DiagnosaKerusakan
+            diagnosa_kerusakan_objects = [
+                DiagnosaKerusakan(
+                    diagnosa=diagnosa,
+                    kerusakan_id=kerusakan_id,
+                    akurasi=info["akurasi"]
+                )
+                for kerusakan_id, info in hasil_diagnosa.items()
+            ]
+            DiagnosaKerusakan.objects.bulk_create(diagnosa_kerusakan_objects)
+
+            # Response ke client
+            response = {
+                "kerusakan": [{"nama": v["nama"], "akurasi": v["akurasi"], "solusi": v["solusi"]} for v in hasil_diagnosa.values()]
+            }
+            return JsonResponse(response)
+        else:
+            # Jika tidak ada hasil diagnosa
+            diagnosa = Diagnosa.objects.create(
+                jenis_elektronik_id=jenis_id,
+                catatan="Tidak ditemukan kerusakan yang sesuai",
+                solusi="Tidak ada solusi yang tersedia"
             )
             diagnosa.gejala.set(gejala_ids)
 
             return JsonResponse({
                 "kerusakan": "Tidak ditemukan",
                 "akurasi": 0,
-                "solusi": solusi_text
+                "solusi": "Tidak ada solusi yang tersedia"
             })
 
+    return JsonResponse({"error": "Metode tidak diizinkan"}, status=405)
 @login_required()
 @csrf_exempt
 def hapus_histori_multiple(request):
@@ -771,22 +812,26 @@ def index(request):
     return render(request, 'index.html')
 @login_required()
 def dashboard(request):
-    # Hitung jumlah data dalam setiap model
     jenis = JenisElektronik.objects.count()
     gejala = Gejala.objects.count()
     kerusakan = Kerusakan.objects.count()
     diagnosa = Diagnosa.objects.all()
-    diagnosa_terakhir = Diagnosa.objects.last()
+    diagnosa_terakhir = Diagnosa.objects.order_by('-tanggal_diagnosa').first()
 
-    # Sertakan data tersebut dalam konteks
+    # Hitung akurasi rata-rata dari DiagnosaKerusakan
+    akurasi_rata_rata = 0
+    if diagnosa_terakhir:
+        akurasi_values = diagnosa_terakhir.diagnosa_kerusakan.values_list('akurasi', flat=True)
+        akurasi_rata_rata = sum(akurasi_values) / len(akurasi_values) if akurasi_values else 0
+
     context = {
         'jenis_count': jenis,
         'gejala_count': gejala,
         'kerusakan_count': kerusakan,
         'diagnosa': diagnosa,
         'diagnosa_terakhir': diagnosa_terakhir,
+        'akurasi_rata_rata': akurasi_rata_rata,
     }
-
     return render(request, 'dashboard.html', context)
 
 def base(request):

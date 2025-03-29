@@ -59,6 +59,7 @@
                <th scope="col" class="px-6 py-3">JENIS</th>
                <th scope="col" class="px-6 py-3">GEJALA</th>
                <th scope="col" class="px-6 py-3">KERUSAKAN</th>
+               <th scope="col" class="px-6 py-3 text-center">KERUSAKAN SEBELUMNYA</th>
                <th scope="col" class="text-center px-6 py-3 flex justify-center items-center gap-6">
                   <p>Action</p>
                   <input id="checkAll" type="checkbox" class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
@@ -78,6 +79,15 @@
                   <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-md bg-gray-700 text-green-400 border border-green-400">
                      <span class="text-yellow-400">{{ data.kerusakan.kodeRsk }}</span> | {{ data.kerusakan }}
                   </span>
+               </td>
+               <td class="px-6 py-4 text-center">
+                  {% for k in data.kerusakan_sebelumnya.all %}
+                  <span class="text-xs font-medium px-2.5 py-0.5 rounded-md bg-gray-700 text-pink-400 border border-pink-600">
+                     {{k.kodeRsk }} | {{k.nama_kerusakan }}
+                  </span>
+                  {% empty %}
+                  <span class="text-xs font-medium px-2.5 py-0.5 rounded-md bg-gray-700 text-gray-400">-</span>
+                  {% endfor %}
                </td>
                <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
                   <a href="#" onclick="editGejala('{{ data.id }}', '{{ data.jenis_elektronik.id }}', '{{ data.kodeRsk }}', '{{ data.kerusakan }}', '{{ data.deskripsi }}')" class="text-indigo-400 hover:text-yellow-400">Edit</a>
