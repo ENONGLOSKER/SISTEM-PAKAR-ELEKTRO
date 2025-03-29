@@ -1,0 +1,266 @@
+{% load static %}
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="{% static 'img/iconEX.png' %}" type="image/x-icon">
+    <title>SISTEM PAKAR</title>
+</head>
+
+<body class="font-['Big_Shoulders']">
+    <div class="absolute top-0 left-0 right-0 bottom-0" id="particles-js"></div>
+    <header class=" h-screen"  >
+        <nav class="flex justify-between mx-auto max-w-6xl pt-5 relative group">
+            <svg width="155" height="38" viewBox="0 0 163 38" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                <path
+                    d="M38.88 27V11.688H46.228V14.416H42.004V17.826H46.008V20.554H42.004V24.272H46.228V27H38.88ZM46.8971 27L49.5811 19.014L46.9631 11.688H50.0211L51.1431 15.252L51.4511 17.782H51.8911L52.1991 15.252L53.2771 11.688H56.3351L53.8491 19.124L56.4011 27H53.3431L52.1991 23.238L51.8911 20.51H51.4511L51.1431 23.238L49.9551 27H46.8971ZM57.4425 27V11.688H61.5345C62.5098 11.688 63.3275 11.8053 63.9875 12.04C64.6475 12.2747 65.1498 12.678 65.4945 13.25C65.8465 13.8147 66.0445 14.5993 66.0885 15.604C66.1032 15.978 66.1105 16.297 66.1105 16.561C66.1178 16.825 66.1178 17.0963 66.1105 17.375C66.1105 17.6463 66.1032 17.9873 66.0885 18.398C66.0445 19.41 65.8428 20.202 65.4835 20.774C65.1315 21.3387 64.6255 21.7383 63.9655 21.973C63.3055 22.2003 62.4952 22.314 61.5345 22.314H60.5665V27H57.4425ZM60.5665 19.564H61.5345C62.0112 19.564 62.3632 19.476 62.5905 19.3C62.8178 19.1167 62.9425 18.8673 62.9645 18.552C63.0085 18.0093 63.0268 17.4593 63.0195 16.902C63.0195 16.3447 63.0012 15.8533 62.9645 15.428C62.9425 15.12 62.8178 14.8743 62.5905 14.691C62.3632 14.5077 62.0112 14.416 61.5345 14.416H60.5665V19.564ZM67.6476 27V11.688H74.9956V14.416H70.7716V17.826H74.7756V20.554H70.7716V24.272H74.9956V27H67.6476ZM76.4347 27V11.688H80.5267C80.9374 11.688 81.392 11.7137 81.8907 11.765C82.3967 11.809 82.8844 11.9483 83.3537 12.183C83.823 12.4103 84.219 12.7917 84.5417 13.327C84.8644 13.8623 85.044 14.6213 85.0807 15.604C85.088 15.8093 85.0917 15.9927 85.0917 16.154C85.099 16.308 85.1027 16.4693 85.1027 16.638C85.1027 16.7993 85.1027 16.99 85.1027 17.21C85.1027 17.43 85.0954 17.7013 85.0807 18.024C85.0514 18.9553 84.868 19.685 84.5307 20.213C84.2007 20.7337 83.8047 21.126 83.3427 21.39L85.3227 27H82.0227L80.4387 21.94H79.5587V27H76.4347ZM79.5587 19.19H80.5267C80.842 19.19 81.1024 19.1497 81.3077 19.069C81.513 18.9883 81.667 18.8747 81.7697 18.728C81.8797 18.574 81.942 18.3907 81.9567 18.178C81.9787 17.936 81.9934 17.6977 82.0007 17.463C82.008 17.2283 82.0117 16.9973 82.0117 16.77C82.0117 16.5353 82.0044 16.308 81.9897 16.088C81.9824 15.8607 81.9714 15.6407 81.9567 15.428C81.942 15.2227 81.8797 15.0467 81.7697 14.9C81.667 14.746 81.513 14.6287 81.3077 14.548C81.1024 14.46 80.842 14.416 80.5267 14.416H79.5587V19.19ZM88.365 27V14.416H85.593V11.688H94.261V14.416H91.489V27H88.365ZM104.387 27.198C103.317 27.198 102.466 27.0587 101.835 26.78C101.212 26.494 100.757 26.054 100.471 25.46C100.193 24.866 100.031 24.096 99.9874 23.15C99.9801 22.8053 99.9801 22.468 99.9874 22.138C99.9947 21.8007 100.024 21.5 100.075 21.236H103.001C102.979 21.544 102.961 21.8447 102.946 22.138C102.939 22.4313 102.939 22.7137 102.946 22.985C102.954 23.2563 102.972 23.5093 103.001 23.744C103.038 24.0373 103.166 24.2647 103.386 24.426C103.614 24.5873 103.947 24.668 104.387 24.668C104.842 24.668 105.168 24.5873 105.366 24.426C105.564 24.2573 105.685 24.0153 105.729 23.7C105.773 23.392 105.792 23.0877 105.784 22.787C105.784 22.479 105.766 22.2113 105.729 21.984C105.7 21.7273 105.608 21.5 105.454 21.302C105.308 21.0967 105.047 20.95 104.673 20.862L102.913 20.466C102.173 20.2973 101.586 20.048 101.153 19.718C100.721 19.3807 100.409 18.9663 100.218 18.475C100.028 17.9763 99.9214 17.4007 99.8994 16.748C99.8921 16.4913 99.8884 16.275 99.8884 16.099C99.8884 15.9157 99.8921 15.7213 99.8994 15.516C99.9434 14.5553 100.112 13.7817 100.405 13.195C100.706 12.601 101.175 12.1683 101.813 11.897C102.459 11.6257 103.317 11.49 104.387 11.49C105.883 11.49 106.972 11.8017 107.654 12.425C108.344 13.041 108.721 14.0713 108.787 15.516C108.795 15.6333 108.795 15.8387 108.787 16.132C108.787 16.4253 108.78 16.7113 108.765 16.99C108.758 17.2613 108.751 17.43 108.743 17.496H105.751C105.766 17.1367 105.773 16.8177 105.773 16.539C105.781 16.2603 105.781 15.9927 105.773 15.736C105.773 15.4793 105.766 15.208 105.751 14.922C105.744 14.636 105.623 14.416 105.388 14.262C105.154 14.1007 104.82 14.02 104.387 14.02C103.94 14.02 103.61 14.1007 103.397 14.262C103.192 14.416 103.067 14.636 103.023 14.922C102.979 15.2153 102.957 15.5197 102.957 15.835C102.957 16.143 102.979 16.4473 103.023 16.748C103.06 16.9533 103.163 17.1587 103.331 17.364C103.5 17.562 103.771 17.7013 104.145 17.782L105.663 18.112C106.448 18.2807 107.068 18.5373 107.522 18.882C107.984 19.2267 108.318 19.6593 108.523 20.18C108.729 20.6933 108.846 21.2873 108.875 21.962C108.883 22.0427 108.886 22.149 108.886 22.281C108.886 22.413 108.883 22.556 108.875 22.71C108.875 22.864 108.868 23.0107 108.853 23.15C108.78 24.118 108.589 24.899 108.281 25.493C107.981 26.087 107.515 26.5197 106.884 26.791C106.261 27.0623 105.429 27.198 104.387 27.198ZM112.456 27V23.392V23.37L109.244 11.688H112.434L113.358 15.318L113.732 19.828H114.326L114.678 15.318L115.602 11.688H118.792L115.58 23.37V23.392V27H112.456ZM123.616 27.198C122.545 27.198 121.695 27.0587 121.064 26.78C120.441 26.494 119.986 26.054 119.7 25.46C119.421 24.866 119.26 24.096 119.216 23.15C119.209 22.8053 119.209 22.468 119.216 22.138C119.223 21.8007 119.253 21.5 119.304 21.236H122.23C122.208 21.544 122.19 21.8447 122.175 22.138C122.168 22.4313 122.168 22.7137 122.175 22.985C122.182 23.2563 122.201 23.5093 122.23 23.744C122.267 24.0373 122.395 24.2647 122.615 24.426C122.842 24.5873 123.176 24.668 123.616 24.668C124.071 24.668 124.397 24.5873 124.595 24.426C124.793 24.2573 124.914 24.0153 124.958 23.7C125.002 23.392 125.02 23.0877 125.013 22.787C125.013 22.479 124.995 22.2113 124.958 21.984C124.929 21.7273 124.837 21.5 124.683 21.302C124.536 21.0967 124.276 20.95 123.902 20.862L122.142 20.466C121.401 20.2973 120.815 20.048 120.382 19.718C119.949 19.3807 119.638 18.9663 119.447 18.475C119.256 17.9763 119.15 17.4007 119.128 16.748C119.121 16.4913 119.117 16.275 119.117 16.099C119.117 15.9157 119.121 15.7213 119.128 15.516C119.172 14.5553 119.341 13.7817 119.634 13.195C119.935 12.601 120.404 12.1683 121.042 11.897C121.687 11.6257 122.545 11.49 123.616 11.49C125.112 11.49 126.201 11.8017 126.883 12.425C127.572 13.041 127.95 14.0713 128.016 15.516C128.023 15.6333 128.023 15.8387 128.016 16.132C128.016 16.4253 128.009 16.7113 127.994 16.99C127.987 17.2613 127.979 17.43 127.972 17.496H124.98C124.995 17.1367 125.002 16.8177 125.002 16.539C125.009 16.2603 125.009 15.9927 125.002 15.736C125.002 15.4793 124.995 15.208 124.98 14.922C124.973 14.636 124.852 14.416 124.617 14.262C124.382 14.1007 124.049 14.02 123.616 14.02C123.169 14.02 122.839 14.1007 122.626 14.262C122.421 14.416 122.296 14.636 122.252 14.922C122.208 15.2153 122.186 15.5197 122.186 15.835C122.186 16.143 122.208 16.4473 122.252 16.748C122.289 16.9533 122.391 17.1587 122.56 17.364C122.729 17.562 123 17.7013 123.374 17.782L124.892 18.112C125.677 18.2807 126.296 18.5373 126.751 18.882C127.213 19.2267 127.547 19.6593 127.752 20.18C127.957 20.6933 128.075 21.2873 128.104 21.962C128.111 22.0427 128.115 22.149 128.115 22.281C128.115 22.413 128.111 22.556 128.104 22.71C128.104 22.864 128.097 23.0107 128.082 23.15C128.009 24.118 127.818 24.899 127.51 25.493C127.209 26.087 126.744 26.5197 126.113 26.791C125.49 27.0623 124.657 27.198 123.616 27.198ZM131.57 27V14.416H128.798V11.688H137.466V14.416H134.694V27H131.57ZM138.568 27V11.688H145.916V14.416H141.692V17.826H145.696V20.554H141.692V24.272H145.916V27H138.568ZM147.355 27V11.688H152.393L153.823 17.408L154.153 24.272H154.703L155.011 17.408L156.441 11.688H161.457V27H158.355V22.248L158.949 14.416H158.355L157.409 22.468L156.111 27H152.723L151.425 22.468L150.457 14.416H149.907L150.479 22.248V27H147.355Z"
+                    fill="black" />
+                <path
+                    d="M9.13336 38C8.92012 38.0002 8.70942 37.9539 8.51607 37.8644C8.32273 37.7749 8.15142 37.6443 8.0142 37.4819C7.87698 37.3194 7.77716 37.1291 7.72177 36.9241C7.66638 36.7192 7.65676 36.5047 7.69358 36.2957V36.2869L9.92962 24.0676H1.2726C1.03231 24.0676 0.796934 23.9999 0.593699 23.8723C0.390463 23.7447 0.227673 23.5625 0.124156 23.3467C0.0206396 23.1309 -0.0193739 22.8903 0.00874462 22.6528C0.0368631 22.4153 0.131964 22.1906 0.283048 22.0047L17.7172 0.556716C17.9156 0.306031 18.1911 0.126928 18.5015 0.0467943C18.8119 -0.0333391 19.1402 -0.0100917 19.4361 0.112982C19.7319 0.236055 19.9792 0.45218 20.1399 0.728306C20.3007 1.00443 20.3662 1.32536 20.3263 1.64202C20.3263 1.66577 20.3199 1.68872 20.316 1.71247L18.072 13.935H26.7274C26.9677 13.935 27.2031 14.0027 27.4063 14.1303C27.6095 14.2579 27.7723 14.4401 27.8758 14.6559C27.9794 14.8717 28.0194 15.1123 27.9913 15.3498C27.9631 15.5873 27.868 15.812 27.717 15.9979L10.2804 37.4459C10.1434 37.6181 9.96912 37.7574 9.77052 37.8534C9.57192 37.9493 9.35413 37.9994 9.13336 38Z"
+                    fill="#010101" />
+            </svg>
+            <a href="https://github.com/ENONGLOSKER/"
+                class="flex justify-between items-center gap-2 border-2 border-black group-hover:border-indigo-500 py-2 px-4 rounded-full hover:text-indigo-600">
+                <svg width="20" height="20" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 0.6875C5.97676 0.6875 0.6875 6.11387 0.6875 12.8006C0.6875 18.1531 4.07305 22.6883 8.76641 24.2914C8.83224 24.3057 8.89943 24.3128 8.9668 24.3125C9.40449 24.3125 9.57324 23.9908 9.57324 23.7113C9.57324 23.4213 9.5627 22.6619 9.55742 21.6494C9.16668 21.741 8.76695 21.7888 8.36563 21.7918C6.09277 21.7918 5.57598 20.0252 5.57598 20.0252C5.03809 18.6277 4.26289 18.2533 4.26289 18.2533C3.23457 17.5309 4.25762 17.5098 4.33672 17.5098H4.34199C5.52852 17.6152 6.15078 18.7648 6.15078 18.7648C6.74141 19.7984 7.53242 20.0885 8.23906 20.0885C8.70631 20.0791 9.16633 19.9713 9.58906 19.7721C9.69453 18.9916 10.0004 18.459 10.3379 18.1531C7.71699 17.8473 4.95898 16.8084 4.95898 12.1678C4.95898 10.8441 5.41777 9.76309 6.17188 8.91934C6.05059 8.61348 5.64453 7.37949 6.28789 5.71309C6.37419 5.69244 6.46288 5.68357 6.55156 5.68672C6.97871 5.68672 7.94375 5.85019 9.53633 6.95762C11.4714 6.4162 13.518 6.4162 15.4531 6.95762C17.0457 5.85019 18.0107 5.68672 18.4379 5.68672C18.5266 5.68357 18.6153 5.69244 18.7016 5.71309C19.3449 7.37949 18.9389 8.61348 18.8176 8.91934C19.5717 9.76836 20.0305 10.8494 20.0305 12.1678C20.0305 16.8189 17.2672 17.842 14.6357 18.1426C15.0576 18.517 15.4373 19.2553 15.4373 20.3838C15.4373 22.0027 15.4215 23.3105 15.4215 23.7061C15.4215 23.9908 15.585 24.3125 16.0227 24.3125C16.0935 24.3128 16.1642 24.3057 16.2336 24.2914C20.9322 22.6883 24.3125 18.1479 24.3125 12.8006C24.3125 6.11387 19.0232 0.6875 12.5 0.6875Z" fill="#010101"/>
+                </svg>
+                Repositori
+            </a>
+        </nav>
+
+        <div class="header-item flex flex-col items-center justify-center mt-32">
+            <div class="relative w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="md:space-y-6 sm:p-8 space-y-4 ">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Sign in to your account
+                    </h1>
+                    <form class="space-y-4 md:space-y-6" method="POST">
+                        {% csrf_token %}
+                        <div>
+                            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                            <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="username" required="">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        </div>
+                        <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            Kembali ke halaman? <a href="{% url 'index' %}" class="font-medium text-primary-600 hover:underline dark:text-indigo-300">Utama</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div class="fixed top-5 right-5 z-50">
+    {% for message in messages %}
+    {% if message.tags == 'success' %}
+    <div id="toast-success"
+        class="flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow-sm text-green-900 bg-green-500"
+        role="alert">
+        <div
+            class="inline-flex items-center justify-center shrink-0 w-8 h-8 rounded-lg bg-green-800 text-green-200">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+            </svg>
+            <span class="sr-only">Check icon</span>
+        </div>
+        <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+        <button type="button"
+            class="ms-auto -mx-1.5 -my-1.5  rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-green-500 hover:bg-gray-700"
+            data-dismiss-target="#toast-success" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+        </button>
+    </div>
+    {% elif message.tags == 'error' %}
+    <div id="toast-danger"
+        class="flex items-center w-full max-w-xs p-4 mb-4  rounded-lg shadow-sm text-red-900 bg-red-500"
+        role="alert">
+        <div
+            class="inline-flex items-center justify-center shrink-0 w-8 h-8  rounded-lg bg-red-800 text-red-200">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+            </svg>
+            <span class="sr-only">Error icon</span>
+        </div>
+        <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+        <button type="button"
+            class="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-gray-800 hover:bg-gray-700"
+            data-dismiss-target="#toast-danger" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS (
+            {
+            "particles": {
+                "number": {
+                "value": 80,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+                },
+                "color": {
+                "value": "#000000"
+                },
+                "shape": {
+                "type": "triangle",
+                "stroke": {
+                    "width": 3,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 10
+                },
+                "image": {
+                    "src": "img/github.svg",
+                    "width": 100,
+                    "height": 100
+                }
+                },
+                "opacity": {
+                "value": 0.6397441023590567,
+                "random": true,
+                "anim": {
+                    "enable": true,
+                    "speed": 1.3769307403837592,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+                },
+                "size": {
+                "value": 2,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+                },
+                "line_linked": {
+                "enable": true,
+                "distance": 100,
+                "color": "#000000",
+                "opacity": 0.5037984806077571,
+                "width": 0.4798080767692925
+                },
+                "move": {
+                "enable": true,
+                "speed": 6.3974410235905665,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "bounce",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "repulse"
+                },
+                "resize": true
+                },
+                "modes": {
+                "grab": {
+                    "distance": 534.5731109725182,
+                    "line_linked": {
+                    "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+                }
+            },
+            "retina_detect": true
+        }
+        )
+        
+    </script>
+
+    <!-- NOTIFIKASI  -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        // Fungsi untuk menghapus elemen toast
+        function removeToast(toast) {
+            toast.style.transition = "opacity 0.5s ease-out";
+            toast.style.opacity = "0";
+            setTimeout(() => toast.remove(), 500); // Hapus dari DOM setelah efek fade-out
+        }
+    
+        // Hapus pesan otomatis setelah 300 detik (300000 ms)
+        setTimeout(function () {
+            let toasts = document.querySelectorAll(".fixed.top-5.right-5.z-50 > div");
+            toasts.forEach(removeToast);
+        }, 3000);
+    
+        // Event listener untuk tombol close
+        document.querySelectorAll("[data-dismiss-target]").forEach(button => {
+            button.addEventListener("click", function () {
+                let toast = this.closest("div[role='alert']");
+                if (toast) {
+                    removeToast(toast);
+                }
+            });
+        });
+        });
+    </script>
+</body>
+
+</html>

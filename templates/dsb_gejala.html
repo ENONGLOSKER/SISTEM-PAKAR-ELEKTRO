@@ -1,0 +1,528 @@
+{%extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div class="flex flex-col rounded-sm text-white bg-gray-50 p-5">
+   <!-- head -->
+   <div class="bg-gray-700 mb-5 p-5 flex justify-between align-middle rounded-lg">
+      <!-- title head -->
+      <div class="flex gap-3 text-left ">
+         <svg width="40" height="40" viewBox="0 0 483 483" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="241.5" cy="241.5" r="241.5" fill="white" />
+            <path
+               d="M367 265.035V246.119H319.679V212.465C337.081 195.942 338.607 174.182 338.607 151.458V142H319.679V151.458C319.679 168.01 318.578 179.922 313.823 189.197C300.75 160.917 274.913 151.458 234.5 151.458C210.958 151.458 190.024 155.632 175.094 165.835C166.28 171.859 160.188 180.56 155.751 189.315C150.504 180.17 149.321 168.495 149.321 151.458V142H130.393V151.458C130.393 173.591 131.925 194.825 149.321 211.282V246.119H102V265.035L149.321 264.958C149.321 276.19 151.51 296.342 155.467 306.155C140.212 319.793 130.393 334.897 130.393 359.542V369H149.321V359.542C149.321 343.191 154.704 333.112 164.801 323.293C177.714 350.083 187.77 359.542 225.036 359.542V189.292H243.964V359.542C282.413 359.542 291.286 350.083 304.199 323.293C314.296 333.112 319.679 343.196 319.679 359.542V369H338.607V359.542C338.607 334.903 328.788 319.799 313.533 306.155C317.49 296.342 319.679 276.19 319.679 264.958L367 265.035Z"
+               fill="#534AED" />
+            <path
+               d="M234.5 104C206.215 104 178 104 178 154C193.373 145.667 212.93 142.095 234.5 142.095C248.678 142.095 261.626 143.673 272.985 146.857C279.312 148.643 287.498 152.042 291 154C291 104 262.785 104 234.5 104Z"
+               fill="#534AED" />
+         </svg>
+         <h3 class="text-4xl font-semibold">DATA GEJALA</h3>
+      </div>
+      <!-- btn -->
+      <div class="flex">
+         <button type="button" onclick="toggleModal(true)"
+            class="text-white bg-[#050708] focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center hover:bg-indigo-500 focus:ring-gray-600 me-2 mb-2 flex gap-2">
+            <svg width="20" height="20" viewBox="0 0 416 416" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path
+                  d="M208 0C93.31 0 0 93.31 0 208C0 322.69 93.31 416 208 416C322.69 416 416 322.69 416 208C416 93.31 322.69 0 208 0ZM304 224H224V304H192V224H112V192H192V112H224V192H304V224Z"
+                  fill="white" />
+            </svg>
+            Add Data
+         </button>
+         <a href="{% static  'file/gejala/gejala.xlsx' %}" 
+            class="text-white bg-[#050708] focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center hover:bg-indigo-500 focus:ring-gray-600 me-2 mb-2 flex gap-2">
+            <svg width="20" height="20" viewBox="0 0 353 353" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <circle cx="176.5" cy="176.5" r="173.5" fill="white" stroke="black" stroke-width="6" />
+               <path
+                  d="M246.929 162.857H189.429C184.2 162.857 179.186 160.78 175.488 157.083C171.791 153.386 169.714 148.371 169.714 143.143V85.6429C169.714 85.2071 169.541 84.7893 169.233 84.4812C168.925 84.1731 168.507 84 168.071 84H130.286C123.314 84 116.628 86.7694 111.699 91.6989C106.769 96.6284 104 103.314 104 110.286V241.714C104 248.686 106.769 255.372 111.699 260.301C116.628 265.231 123.314 268 130.286 268H222.286C229.257 268 235.943 265.231 240.873 260.301C245.802 255.372 248.571 248.686 248.571 241.714V164.5C248.571 164.064 248.398 163.646 248.09 163.338C247.782 163.03 247.364 162.857 246.929 162.857ZM209.143 228.571H143.429C141.686 228.571 140.014 227.879 138.782 226.647C137.549 225.414 136.857 223.743 136.857 222C136.857 220.257 137.549 218.586 138.782 217.353C140.014 216.121 141.686 215.429 143.429 215.429H209.143C210.886 215.429 212.557 216.121 213.79 217.353C215.022 218.586 215.714 220.257 215.714 222C215.714 223.743 215.022 225.414 213.79 226.647C212.557 227.879 210.886 228.571 209.143 228.571ZM209.143 195.714H143.429C141.686 195.714 140.014 195.022 138.782 193.79C137.549 192.557 136.857 190.886 136.857 189.143C136.857 187.4 137.549 185.729 138.782 184.496C140.014 183.264 141.686 182.571 143.429 182.571H209.143C210.886 182.571 212.557 183.264 213.79 184.496C215.022 185.729 215.714 187.4 215.714 189.143C215.714 190.886 215.022 192.557 213.79 193.79C212.557 195.022 210.886 195.714 209.143 195.714Z"
+                  fill="black" />
+               <path
+                  d="M243.323 148.314L184.258 89.2489C184.143 89.1347 183.997 89.057 183.838 89.0256C183.679 88.9942 183.514 89.0105 183.365 89.0723C183.215 89.1342 183.087 89.239 182.997 89.3734C182.906 89.5079 182.858 89.666 182.857 89.828V143.143C182.857 144.886 183.549 146.557 184.782 147.79C186.014 149.022 187.686 149.714 189.429 149.714H242.743C242.905 149.714 243.064 149.665 243.198 149.575C243.332 149.484 243.437 149.356 243.499 149.207C243.561 149.057 243.577 148.892 243.546 148.734C243.514 148.575 243.437 148.429 243.323 148.314Z"
+                  fill="black" />
+            </svg>
+
+            Template
+         </a>
+         <button type="button" onclick="showImportModal()"
+            class="text-white bg-[#050708] focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center hover:bg-indigo-500 focus:ring-gray-600 me-2 mb-2 flex gap-2">
+            <svg width="20" height="20" viewBox="0 0 353 353" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <circle cx="176.5" cy="176.5" r="173.5" fill="white" stroke="black" stroke-width="6" />
+               <path
+                  d="M267.125 157C261.328 152.713 254.206 149.565 246.687 147.868C245.452 147.59 244.322 146.969 243.428 146.075C242.534 145.181 241.914 144.052 241.639 142.82C238.41 128.467 231.457 116.158 221.238 106.832C209.359 95.9726 193.649 90 177 90C162.363 90 148.844 94.5765 137.925 103.238C130.525 109.118 124.568 116.605 120.509 125.129C120.069 126.062 119.417 126.879 118.604 127.515C117.79 128.152 116.839 128.589 115.826 128.793C104.75 131.024 94.7506 135.761 87.1153 142.473C76.5733 151.767 71 164.121 71 178.226C71 192.485 76.9998 205.487 87.8896 214.888C98.2909 223.847 112.294 228.783 127.312 228.783H170.375V165.434L155.183 180.589C154.549 181.222 153.792 181.719 152.96 182.051C152.127 182.384 151.235 182.544 150.339 182.522C149.442 182.501 148.559 182.298 147.743 181.926C146.928 181.554 146.196 181.02 145.593 180.358C143.192 177.727 143.424 173.625 145.945 171.11L172.317 144.807C173.559 143.568 175.244 142.873 177 142.873C178.756 142.873 180.441 143.568 181.683 144.807L208.055 171.101C210.655 173.699 210.804 177.958 208.216 180.564C207.602 181.183 206.872 181.674 206.067 182.01C205.262 182.347 204.398 182.521 203.526 182.523C202.653 182.525 201.789 182.356 200.982 182.024C200.175 181.692 199.442 181.204 198.825 180.589L183.625 165.434V228.783H234.969C247.945 228.783 259.775 225.148 268.28 218.552C277.911 211.076 283 200.378 283 187.644C283 175.277 277.51 164.674 267.125 157ZM170.375 255.391C170.375 257.144 171.073 258.825 172.315 260.064C173.558 261.304 175.243 262 177 262C178.757 262 180.442 261.304 181.685 260.064C182.927 258.825 183.625 257.144 183.625 255.391V228.783H170.375V255.391Z"
+                  fill="black" />
+            </svg>
+
+            Import
+         </button>
+      </div>
+   </div>
+
+   <!-- filter data -->
+   <div class="flex flex-row-reverse gap-3 align-bottom">
+
+      <button type="button" id="delete_checkbok"
+         class="text-black focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-3 py-2.5 text-center items-center hover:text-red-600 focus:ring-gray-600 me-2 mb-2 flex gap-1">
+         
+         Delete All Check
+      </button>
+      <form>
+         <select id="filterJenis" class="text-sm rounded-lg block w-full p-2.5 text-black">
+            <option value="">Filter By Jenis</option>
+            {% for jenis in jenis_elektronik %}
+            <option value="{{ jenis.id }}">{{ jenis.nama }}</option>
+            {% endfor %}
+         </select>
+      </form>
+      <form>
+         <input type="text" id="filterGejala"
+            class="text-sm rounded-lg block w-full p-2.5 text-black"
+            placeholder="Cari Nama Gejala...">
+      </form>
+   </div>
+
+   <!-- tabel -->
+   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-300">
+         <thead class="text-xl uppercas bg-gray-700 text-indigo-400">
+            <tr>
+               <th scope="col" class="px-6 py-3">
+                  JENIS
+               </th>
+               <th scope="col" class="px-6 py-3">
+                  KODE GEJALA
+               </th>
+               <th scope="col" class="px-6 py-3">
+                  NAMA GEJALA
+               </th>
+               <th scope="col" class="px-6 py-3">
+                  DESKRIPSI
+               </th>
+               <th scope="col" class="text-center px-6 py-3 flex justify-center items-center gap-6">
+                  <p>Action</p>
+                  <input id="checkAll" type="checkbox" value=""
+                     class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+               </th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for data in gejala %}
+            <tr
+               class="border-b bg-gray-800  border-gray-500  hover:bg-gray-600">
+               <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                  {{data.jenis_elektronik}}
+               </th>
+               <td class="px-6 py-4 text-center">
+                  {{data.kodeGjl}}
+               </td>
+               <td class="px-6 py-4">
+                  <span
+                     class=" text-xs font-medium me-2 px-2.5 py-0.5 rounded-md bg-gray-700 text-green-400 border border-green-400">{{data.nama}}</span>
+               </td>
+               <td class="px-6 py-4">
+                  {{data.deskripsi}}
+               </td>
+               <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
+                  <a href="#"
+                     onclick="editGejala('{{ data.id }}', '{{ data.jenis_elektronik.id }}', '{{ data.kodeGjl }}', '{{ data.nama }}', '{{ data.deskripsi }}')"
+                     class="text-indigo-400 hover:text-yellow-400">Edit</a>
+                  <a href="#" onclick="hapusGejala('{{ data.id }}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
+                  <input type="checkbox" value="{{ data.id }}"
+                     class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+</div>
+
+<!-- MODAL -------------------------------------------------------------------------- -->
+<!-- Modal Tambah Gejala -->
+<div id="addGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+   <div class="bg-gray-700 rounded-lg shadow-lg w-96 p-6">
+      <h2 class="text-xl font-bold mb-4">Tambah Gejala</h2>
+      <form id="addGejalaForm">
+         {% csrf_token %}
+         <div class="mb-3 text-slate-700">
+            <label for="jenis_elektronik" class="block text-sm font-medium text-gray-700">Jenis Elektronik</label>
+            <select id="jenis_elektronik" name="jenis_elektronik" required class="w-full p-2 border rounded">
+               <option value="">Pilih Jenis</option>
+               {% for jenis in jenis_elektronik %}
+               <option value="{{ jenis.id }}">{{ jenis.nama }}</option>
+               {% endfor %}
+            </select>
+         </div>
+         <div class="mb-3 text-slate-700">
+            <label for="kodeGjl" class="block text-sm font-medium text-white">Kode Gejala</label>
+            <input type="text" id="kodeGjl" name="kodeGjl" required class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3 text-slate-700">
+            <label for="nama" class="block text-sm font-medium text-white">Nama Gejala</label>
+            <input type="text" id="nama" name="nama" required class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3 text-slate-700">
+            <label for="deskripsi" class="block text-sm font-medium text-white">Deskripsi</label>
+            <textarea id="deskripsi" name="deskripsi" required class="w-full p-2 border rounded"></textarea>
+         </div>
+         <div class="flex justify-end gap-2">
+            <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+         </div>
+      </form>
+   </div>
+</div>
+<!-- Modal Edit Gejala -->
+<div id="editGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+   <div class="bg-gray-700  text-gray-800 rounded-lg shadow-lg w-96 p-6">
+      <h2 class="text-xl font-bold mb-4">Edit Gejala</h2>
+      <form id="editGejalaForm">
+         {% csrf_token %}
+         <input type="hidden" id="edit_id" name="id">
+         <div class="mb-3">
+            <label for="edit_jenis_elektronik" class="block text-white text-sm font-medium ">Jenis Elektronik</label>
+            <select id="edit_jenis_elektronik" name="jenis_elektronik" required class="w-full p-2 border rounded">
+               {% for jenis in jenis_elektronik %}
+               <option value="{{ jenis.id }}">{{ jenis.nama }}</option>
+               {% endfor %}
+            </select>
+         </div>
+         <div class="mb-3">
+            <label for="edit_kodeGjl" class="block text-white text-sm font-medium">Kode Gejala</label>
+            <input type="text" id="edit_kodeGjl" name="kodeGjl" required class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3">
+            <label for="edit_nama" class="block text-white text-sm font-medium">Nama Gejala</label>
+            <input type="text" id="edit_nama" name="nama" required class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3">
+            <label for="edit_deskripsi" class="block text-white text-sm font-medium">Deskripsi</label>
+            <textarea id="edit_deskripsi" name="deskripsi" required class="w-full p-2 border rounded"></textarea>
+         </div>
+         <div class="flex justify-end gap-2">
+            <button type="button" onclick="toggleEditModal(false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+         </div>
+      </form>
+   </div>
+</div>
+<!-- Import modal -->
+<div id="import-modal" tabindex="-1" aria-hidden="true"
+   class="hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50">
+   <div class="relative p-4 w-full max-w-md mx-auto -mt-[2%]">
+      <div class="relative rounded-lg shadow-sm bg-gray-700">
+         <button type="button" onclick="hideImportModal()"
+            class="absolute top-3 end-2.5 text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center  hover:text-white">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <span class="sr-only">Close modal</span>
+         </button>
+         <div class="p-4 md:p-5">
+            <h3 class="mb-4 text-xl font-bold  text-white">Import Data</h3>
+            <form method="POST" action="{% url 'import_gejala' %}" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="flex items-center justify-center w-full mb-3">
+                  <label for="dropzone-file"
+                     class="flex flex-col items-center justify-center w-full h-64 border-2 0 border-dashed rounded-lg cursor-pointer  bg-gray-700  border-gray-600 hover:border-gray-500 hover:bg-gray-600">
+                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4  text-gray-400" aria-hidden="true"
+                           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-400"><span class="font-semibold">Click to
+                              upload</span> or drag and drop</p>
+                        <p class="text-xs text-gray-400">Excel file</p>
+                     </div>
+                     <input id="dropzone-file" type="file" name="file" class="hidden" required />
+                  </label>
+               </div>
+               <div class="flex justify-end gap-4">
+                  <button type="button" onclick="hideImportModal()"
+                     class="py-2.5 px-5 text-sm font-medium focus:outline-none rounded-lg border focus:z-10 focus:ring-4 before:focus:ring-gray-700 bg-gray-800 text-gray-400 border-gray-600 hover:text-white hover:bg-gray-700">Cancel</button>
+                  <button type="submit"
+                     class="text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">
+                     Import
+                  </button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- NOTIF -------------------------------------------------------------------------- -->
+<!-- notif -->
+{% if messages %}
+<div class="fixed top-5 right-5 z-50">
+   {% for message in messages %}
+   {% if message.tags == 'success' %}
+   <div id="toast-success"
+      class="flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow-sm text-green-900 bg-green-500"
+      role="alert">
+      <div
+         class="inline-flex items-center justify-center shrink-0 w-8 h-8 rounded-lg bg-green-800 text-green-200">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+               d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+         </svg>
+         <span class="sr-only">Check icon</span>
+      </div>
+      <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+      <button type="button"
+         class="ms-auto -mx-1.5 -my-1.5  rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-green-500 hover:bg-gray-700"
+         data-dismiss-target="#toast-success" aria-label="Close">
+         <span class="sr-only">Close</span>
+         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+         </svg>
+      </button>
+   </div>
+   {% elif message.tags == 'error' %}
+   <div id="toast-danger"
+      class="flex items-center w-full max-w-xs p-4 mb-4  rounded-lg shadow-sm text-red-900 bg-red-500"
+      role="alert">
+      <div
+         class="inline-flex items-center justify-center shrink-0 w-8 h-8  rounded-lg bg-red-800 text-red-200">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+               d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+         </svg>
+         <span class="sr-only">Error icon</span>
+      </div>
+      <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+      <button type="button"
+         class="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-gray-800 hover:bg-gray-700"
+         data-dismiss-target="#toast-danger" aria-label="Close">
+         <span class="sr-only">Close</span>
+         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+         </svg>
+      </button>
+   </div>
+   {% endif %}
+   {% endfor %}
+</div>
+{% endif %}
+</div>
+
+{% endblock content %}
+
+<!-- SCRIPT ============================================================================ -->
+{% block script %}
+<!-- add data -->
+<script>
+   function toggleModal(show) {
+      document.getElementById("addGejalaModal").classList.toggle("hidden", !show);
+   }
+
+   document.getElementById("addGejalaForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Mencegah reload
+      let formData = new FormData(this);
+
+      fetch("{% url 'tambah_gejala' %}", {
+         method: "POST",
+         body: formData,
+         headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+         }
+      })
+         .then(response => response.json())
+         .then(data => {
+            if (data.status === "success") {
+               toggleModal(false);
+               location.reload(); // Refresh halaman untuk melihat data baru
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- hapus data -->
+<script>
+   function hapusGejala(id) {
+      if (confirm("Apakah Anda yakin ingin menghapus gejala ini?")) {
+         fetch("{% url 'hapus_gejala' %}", {
+            method: "POST",
+            body: JSON.stringify({ "id": id }),
+            headers: {
+               "X-CSRFToken": "{{ csrf_token }}",
+               "Content-Type": "application/json"
+            }
+         })
+            .then(response => response.json())
+            .then(data => {
+               if (data.status === "success") {
+                  location.reload();
+               }
+            })
+            .catch(error => console.error("Error:", error));
+      }
+   }
+</script>
+<!-- edit datas -->
+<script>
+   function toggleEditModal(show) {
+      document.getElementById("editGejalaModal").classList.toggle("hidden", !show);
+   }
+
+   function editGejala(id, jenisId, kodeGjl, nama, deskripsi) {
+      document.getElementById("edit_id").value = id;
+      document.getElementById("edit_jenis_elektronik").value = jenisId;
+      document.getElementById("edit_kodeGjl").value = kodeGjl;
+      document.getElementById("edit_nama").value = nama;
+      document.getElementById("edit_deskripsi").value = deskripsi;
+      toggleEditModal(true);
+   }
+
+   document.getElementById("editGejalaForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+
+      fetch("{% url 'edit_gejala' %}", {
+         method: "POST",
+         body: formData,
+         headers: { "X-CSRFToken": "{{ csrf_token }}" }
+      })
+         .then(response => response.json())
+         .then(data => {
+            if (data.status === "success") {
+               toggleEditModal(false);
+               location.reload();
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- multipel delete -->
+<script>
+   // Select/Deselect All
+   document.getElementById("checkAll").addEventListener("change", function () {
+      const checkboxes = document.querySelectorAll(".rowCheckbox");
+      checkboxes.forEach(checkbox => {
+         checkbox.checked = this.checked;
+      });
+   });
+
+   // Handle Delete Action
+   document.getElementById("delete_checkbok").addEventListener("click", function () {
+      const selectedIds = Array.from(document.querySelectorAll(".rowCheckbox:checked"))
+         .map(checkbox => checkbox.value);
+
+      if (selectedIds.length === 0) {
+         alert("Pilih data yang ingin dihapus!");
+         return;
+      }
+
+      if (!confirm("Apakah Anda yakin ingin menghapus data yang dipilih?")) {
+         return;
+      }
+
+      // AJAX Request
+      fetch("{% url 'hapus_gejala_multiple' %}", {
+         method: "POST",
+         headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+         },
+         body: JSON.stringify({ ids: selectedIds })
+      })
+         .then(response => {
+            if (response.ok) {
+               window.location.reload(); // Reload page
+            } else {
+               alert("Terjadi kesalahan saat menghapus data.");
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- FILTER DATA -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function fetchFilteredData() {
+            var jenis_elektronik = $('#filterJenis').val();
+            var gejala_nama = $('#filterGejala').val();
+
+            $.ajax({
+                url: "{% url 'filter_gejala' %}",
+                data: {
+                    'jenis_elektronik': jenis_elektronik,
+                    'gejala_nama': gejala_nama
+                },
+                dataType: 'json',
+                success: function(response) {
+                    var tbody = $('tbody');
+                    tbody.empty(); // Hapus data lama
+
+                    $.each(response.gejala, function(index, item) {
+                        var row = `
+                        <tr class="border-b bg-gray-800 border-gray-200 hover:bg-gray-600">
+                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                                ${item.jenis_elektronik__nama}
+                            </th>
+                            <td class="px-6 py-4 text-center">${item.kodeGjl}</td>
+                            <td class="px-6 py-4">
+                                <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-md bg-gray-700 text-green-400 border border-green-400">
+                                    ${item.nama}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">${item.deskripsi}</td>
+                            <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
+                                <a href="#" onclick="editGejala('${item.id}', '${item.jenis_elektronik__nama}', '${item.kodeGjl}', '${item.nama}', '${item.deskripsi}')" class="text-indigo-400 hover:text-yellow-400">Edit</a>
+                                <a href="#" onclick="hapusGejala('${item.id}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
+                                <input type="checkbox" value="${item.id}" class="rowCheckbox w-4 h-4 text-blue-600 bg-gray-100 opacity-50 focus:opacity-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+                            </td>
+                        </tr>`;
+                        tbody.append(row);
+                    });
+                }
+            });
+        }
+
+        $('#filterJenis, #filterGejala').on('change keyup', fetchFilteredData);
+    });
+</script>
+<!-- NOTIFIKASI  -->
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+      // Fungsi untuk menghapus elemen toast
+      function removeToast(toast) {
+         toast.style.transition = "opacity 0.5s ease-out";
+         toast.style.opacity = "0";
+         setTimeout(() => toast.remove(), 500); // Hapus dari DOM setelah efek fade-out
+      }
+
+      // Hapus pesan otomatis setelah 300 detik (300000 ms)
+      setTimeout(function () {
+         let toasts = document.querySelectorAll(".fixed.top-5.right-5.z-50 > div");
+         toasts.forEach(removeToast);
+      }, 3000);
+
+      // Event listener untuk tombol close
+      document.querySelectorAll("[data-dismiss-target]").forEach(button => {
+         button.addEventListener("click", function () {
+            let toast = this.closest("div[role='alert']");
+            if (toast) {
+               removeToast(toast);
+            }
+         });
+      });
+   });
+</script>
+<!-- MODAL -->
+<script>
+   function showImportModal() {
+      document.getElementById('import-modal').classList.remove('hidden');
+      document.getElementById('import-modal').classList.add('flex');
+   }
+
+   function hideImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+      document.getElementById('import-modal').classList.remove('flex');
+   }
+</script>
+{% endblock script %}

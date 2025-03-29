@@ -1,0 +1,462 @@
+
+{%extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div class="flex flex-col rounded-sm text-white bg-gray-50 p-5">
+   <!-- head -->
+   <div class="bg-gray-700 mb-5 p-5 flex justify-between align-middle rounded-lg">
+      <!-- title head -->
+      <div class="flex gap-3 text-left ">
+         <svg width="40" height="40" viewBox="0 0 483 483" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="241.5" cy="241.5" r="241.5" fill="white" />
+            <path
+               d="M376.44 160.493L331.021 205.772L303.812 178.657L349.23 133.396C323.902 121.074 288.375 121.023 267.344 141.993C247.561 161.709 245.091 192.744 254.719 217.158L153.762 317.315C153.135 317.939 152.638 318.681 152.299 319.498C151.96 320.315 151.785 321.191 151.785 322.076C151.785 322.96 151.96 323.836 152.299 324.653C152.638 325.47 153.135 326.212 153.762 326.837L183.038 356.023C183.662 356.65 184.404 357.147 185.221 357.486C186.038 357.825 186.914 358 187.799 358C188.683 358 189.559 357.825 190.376 357.486C191.193 357.147 191.935 356.65 192.56 356.023L293.377 254.926C317.551 264.005 348.267 261.445 367.724 242.043C388.728 221.068 388.683 185.843 376.44 160.493Z"
+               fill="#534AED" />
+            <path
+               d="M302.68 270.967L262.449 311.294L304.753 356.057C305.313 356.653 305.988 357.13 306.737 357.46C307.485 357.789 308.293 357.965 309.111 357.976C309.929 357.987 310.74 357.833 311.498 357.523C312.255 357.214 312.942 356.755 313.518 356.174L347.124 322.311C347.699 321.729 348.152 321.038 348.457 320.279C348.761 319.519 348.912 318.707 348.9 317.889C348.887 317.071 348.712 316.263 348.384 315.514C348.056 314.764 347.582 314.088 346.99 313.523L302.68 270.967ZM164.645 216.85C164.645 214.123 162.404 211.625 160.472 209.692L160.332 209.558L159.469 208.735C159.416 208.674 159.375 208.603 159.35 208.526C159.325 208.449 159.316 208.367 159.324 208.286C160.944 207.374 162.805 206.983 164.656 207.166C165.367 207.239 167.966 207.67 171.601 209.916C173.494 211.087 189.877 226.848 196.206 232.712C195.096 233.873 194.483 235.421 194.498 237.027C194.512 238.633 195.153 240.17 196.284 241.31L200.446 245.712L237.222 209.211L232.601 204.819C231.465 203.684 229.927 203.043 228.32 203.037C226.714 203.031 225.171 203.659 224.026 204.786C211.144 190.963 207.783 184.93 206.663 181.01C204.187 172.345 208.982 165.327 214.504 160.846C217.775 158.259 224.519 156.321 230.747 155.805C232.921 155.677 235.101 155.79 237.25 156.141C239.193 156.421 240.779 156.78 241.389 156.926C243.503 157.495 245.564 158.245 247.55 159.166L254.271 148.524C252.196 144.917 249.674 141.586 246.766 138.61C245.827 137.628 244.858 136.675 243.859 135.754C239.501 131.749 228.176 125 213.283 125C204.682 124.991 196.163 126.669 188.208 129.94C167.238 138.532 153.549 150.244 147.259 156.461L147.22 156.5C142.993 160.747 139.083 165.298 135.519 170.116C132.523 174.333 132.848 178.988 133.066 182.068C133.066 182.248 133.066 182.444 133.105 182.628C131.349 181.356 129.236 180.67 127.068 180.668C125.724 180.659 124.393 180.918 123.151 181.431C121.909 181.943 120.782 182.699 119.837 183.653L99.1132 204.315C98.4004 205.029 98 205.996 98 207.004C98 208.012 98.4004 208.979 99.1132 209.692L134.399 244.855C135.105 245.56 136.062 245.957 137.06 245.957C138.058 245.957 139.014 245.56 139.72 244.855L160.477 224.132C162.404 222.205 164.645 219.572 164.645 216.85Z"
+               fill="#534AED" />
+         </svg>
+      
+         <h3 class="text-4xl font-semibold">DATA SOLUSI</h3>
+      </div>
+      <!-- btn -->
+      <div class="flex">
+         <button type="button" onclick="toggleModal(true)"
+            class="text-white bg-[#050708] focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center hover:bg-indigo-500 focus:ring-gray-600 me-2 mb-2 flex gap-2">
+            <svg width="20" height="20" viewBox="0 0 416 416" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path
+                  d="M208 0C93.31 0 0 93.31 0 208C0 322.69 93.31 416 208 416C322.69 416 416 322.69 416 208C416 93.31 322.69 0 208 0ZM304 224H224V304H192V224H112V192H192V112H224V192H304V224Z"
+                  fill="white" />
+            </svg>
+            Add Data
+         </button>
+      </div>
+   </div>
+
+   <!-- filter data -->
+   <div class="flex flex-row-reverse gap-3 align-bottom">
+
+      <button type="button" id="delete_checkbok"
+         class="text-black focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-3 py-2.5 text-center items-center hover:text-red-600 focus:ring-gray-600 me-2 mb-2 flex gap-1">
+         
+         Delete All Check
+      </button>
+      <form>
+         <select id="filterJenis" class="text-sm rounded-lg block w-full p-2.5 text-black">
+            <option value="">Filter By Jenis</option>
+            {% for jenis in jenis_elektronik %}
+            <option value="{{ jenis.id }}">{{ jenis.nama }}</option>
+            {% endfor %}
+         </select>
+      </form>
+      <form>
+         <input type="text" id="filterGejala"
+            class="text-sm rounded-lg block w-full p-2.5 text-black"
+            placeholder="Cari Nama Kerusakan...">
+      </form>
+   </div>
+
+   <!-- tabel -->
+   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-300">
+         <thead class="text-xl uppercas bg-gray-700 text-indigo-400">
+            <tr>
+               <th scope="col" class="px-6 py-3 text-center">
+                  KERUSAKAN
+               </th>
+               <th scope="col" class="px-6 py-3 text-center">
+                  SOLUSI
+               </th>
+               <th scope="col" class="px-6 py-3 text-center">
+                 DESKRIPSI
+               </th>
+               <th scope="col" class="px-6 py-3 text-center">
+                  REKOMENDASI
+               </th>
+               <th scope="col" class="px-6 py-3 text-center">
+                  BIAYA PERBAIKAN
+               </th>
+               <th scope="col" class="px-6 py-3 text-center">
+                  WAKTU PERBAIKAN
+               </th>
+               <th scope="col" class="text-center px-6 py-3 flex justify-center items-center gap-6">
+                  <p>Action</p>
+                  <input id="checkAll" type="checkbox" value=""
+                     class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+               </th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for data in solusi %}
+            <tr
+               class="border-b bg-gray-800  border-gray-500  hover:bg-gray-600">
+               <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                  <span class="text-yellow-400 font-semibold">{{data.kerusakan.kodeRsk}}</span> |
+                  {{data.kerusakan}}
+               </th>
+               <td class="px-6 py-4">
+                  {{data.nama_solusi}}
+               </td>
+               <td class="px-6 py-4">
+                  {{data.deskripsi}}
+               </td>
+               <td class="px-6 py-4 text-center">
+                  {{data.is_recommended}}
+               </td>
+               <td class="px-6 py-4 text-center">
+                  {{data.biaya_perbaikan}} k
+               </td>
+               <td class="px-6 py-4 text-center">
+                  {{data.waktu_perbaikan}} menit
+               </td>
+               <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
+                  <a href="#" onclick="editSolusi('{{ data.id }}')" class="text-indigo-400 hover:text-yellow-400">Edit</a>
+                  <a href="#" onclick="hapusGejala('{{ data.id }}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
+                  <input type="checkbox" value="{{ data.id }}"
+                     class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+</div>
+
+<!-- MODAL -------------------------------------------------------------------------- -->
+
+<!-- Modal Tambah solusi -->
+<div id="addGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+   <div class="bg-gray-700 rounded-lg shadow-lg w-96 p-6">
+      <h2 class="text-xl font-bold mb-4 text-white">Tambah Solusi</h2>
+      <form id="add_solusi" >
+         {% csrf_token %}
+         <div class="mb-3">
+            <label for="kerusakan" class="block text-sm font-medium text-white">Kerusakan</label>
+            <select id="kerusakan" name="kerusakan" required class="w-full p-2 border rounded">
+               <option value="">Pilih Kerusakan</option>
+               {% for k in kerusakan %}
+               <option value="{{ k.id }}">{{ k.kodeRsk }} | {{ k.nama_kerusakan }}</option>
+               {% endfor %}
+            </select>
+         </div>
+         <div class="mb-3">
+            <label for="nama_solusi" class="block text-sm font-medium text-white">Nama Solusi</label>
+            <input type="text" id="nama_solusi" name="nama_solusi" required class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3">
+            <label for="deskripsi" class="block text-sm font-medium text-white">Deskripsi</label>
+            <textarea id="deskripsi" name="deskripsi" required class="w-full p-2 border rounded"></textarea>
+         </div>
+         <div class="mb-3">
+            <label for="biaya_perbaikan" class="block text-sm font-medium text-white">Biaya Perbaikan (Rp)</label>
+            <input type="number" id="biaya_perbaikan" name="biaya_perbaikan" min="0" class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3">
+            <label for="waktu_perbaikan" class="block text-sm font-medium text-white">Waktu Perbaikan</label>
+            <input type="text" id="waktu_perbaikan" name="waktu_perbaikan" class="w-full p-2 border rounded">
+         </div>
+         <div class="flex justify-end gap-2">
+            <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+         </div>
+      </form>
+   </div>
+</div>
+<!-- EDIT MODAL -->
+<div id="editGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+   <div class="bg-gray-700 text-gray-800 rounded-lg shadow-lg w-96 p-6">
+      <h2 class="text-xl font-bold mb-4">Edit Solusi</h2>
+      <form id="edit_solusi">
+         {% csrf_token %}
+         <input type="hidden" id="solusi_id" name="solusi_id">
+         <div class="mb-3">
+            <label for="kerusakan" class="block text-sm font-medium text-white">Kerusakan</label>
+            <select id="kerusakan" name="kerusakan" required class="w-full p-2 border rounded">
+               <option value="">Pilih Kerusakan</option>
+               {% for k in kerusakan %}
+               <option value="{{ k.id }}">{{ k.nama_kerusakan }}</option>
+               {% endfor %}
+            </select>
+         </div>
+         <div class="mb-3">
+            <label for="nama_solusi" class="block text-sm font-medium text-white">Nama Solusi</label>
+            <input type="text" id="nama_solusi" name="nama_solusi" required class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3">
+            <label for="deskripsi" class="block text-sm font-medium text-white">Deskripsi</label>
+            <textarea id="deskripsi" name="deskripsi" required class="w-full p-2 border rounded"></textarea>
+         </div>
+         <div class="mb-3">
+            <label for="biaya_perbaikan" class="block text-sm font-medium text-white">Biaya Perbaikan (Rp)</label>
+            <input type="number" id="biaya_perbaikan" name="biaya_perbaikan" min="0" class="w-full p-2 border rounded">
+         </div>
+         <div class="mb-3">
+            <label for="waktu_perbaikan" class="block text-sm font-medium text-white">Waktu Perbaikan</label>
+            <input type="text" id="waktu_perbaikan" name="waktu_perbaikan" class="w-full p-2 border rounded">
+         </div>
+         <div class="flex justify-end gap-2">
+            <button type="button" onclick="toggleModal('editGejalaModal', false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+         </div>
+      </form>
+   </div>
+</div>
+
+<!-- NOTIF -------------------------------------------------------------------------- -->
+<!-- notif -->
+{% if messages %}
+<div class="fixed top-5 right-5 z-50">
+   {% for message in messages %}
+   {% if message.tags == 'success' %}
+   <div id="toast-success"
+      class="flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow-sm text-green-900 bg-green-500"
+      role="alert">
+      <div
+         class="inline-flex items-center justify-center shrink-0 w-8 h-8 rounded-lg bg-green-800 text-green-200">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+               d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+         </svg>
+         <span class="sr-only">Check icon</span>
+      </div>
+      <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+      <button type="button"
+         class="ms-auto -mx-1.5 -my-1.5  rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-green-500 hover:bg-gray-700"
+         data-dismiss-target="#toast-success" aria-label="Close">
+         <span class="sr-only">Close</span>
+         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+         </svg>
+      </button>
+   </div>
+   {% elif message.tags == 'error' %}
+   <div id="toast-danger"
+      class="flex items-center w-full max-w-xs p-4 mb-4  rounded-lg shadow-sm text-red-900 bg-red-500"
+      role="alert">
+      <div
+         class="inline-flex items-center justify-center shrink-0 w-8 h-8  rounded-lg bg-red-800 text-red-200">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+               d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+         </svg>
+         <span class="sr-only">Error icon</span>
+      </div>
+      <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+      <button type="button"
+         class="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-gray-800 hover:bg-gray-700"
+         data-dismiss-target="#toast-danger" aria-label="Close">
+         <span class="sr-only">Close</span>
+         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+         </svg>
+      </button>
+   </div>
+   {% endif %}
+   {% endfor %}
+</div>
+{% endif %}
+</div>
+
+{% endblock content %}
+
+<!-- SCRIPT ============================================================================ -->
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- add data -->
+<script>
+   function toggleModal(show) {
+      document.getElementById('addGejalaModal').classList.toggle('hidden', !show);
+   }
+   
+   document.getElementById('add_solusi').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+   
+      fetch("{% url 'tambah_solusi' %}", {
+         method: 'POST',
+         body: formData,
+         headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+         }
+      })
+      .then(response => response.json())
+      .then(data => {
+         if (data.status === 'success') {
+            toggleModal(false); // Tutup modal
+            window.location.reload();
+            // Opsional: Tambahkan logika untuk memperbarui UI tanpa refresh
+         } else {
+            alert(data.message);
+         }
+      })
+      .catch(error => {
+         console.error('Error:', error);
+         alert('Terjadi kesalahan saat menyimpan data.');
+      });
+   });
+</script>
+<!-- EDIT -->
+<!-- <script>
+   // function toggleModal(modalId, show) {
+   //    document.getElementById(modalId).classList.toggle('hidden', !show);
+   // }
+   
+   // Fungsi untuk membuka modal edit dan mengisi data
+   function editSolusi(solusiId) {
+      fetch(`{% url 'edit_solusi' 0 %}`.replace('0', solusiId))
+         .then(response => response.json())
+         .then(data => {
+            if (data.status === 'success') {
+               const solusi = data.solusi;
+               document.getElementById('solusi_id').value = solusi.id;
+               document.getElementById('kerusakan').value = solusi.kerusakan_id;
+               document.getElementById('nama_solusi').value = solusi.nama_solusi;
+               document.getElementById('deskripsi').value = solusi.deskripsi;
+               document.getElementById('biaya_perbaikan').value = solusi.biaya_perbaikan;
+               document.getElementById('waktu_perbaikan').value = solusi.waktu_perbaikan;
+               toggleModal('editGejalaModal', true);
+            } else {
+               alert(data.message);
+            }
+         })
+         .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengambil data solusi.');
+         });
+   }
+   
+   // Fungsi untuk submit form edit
+   document.getElementById('edit_solusi').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+   
+      fetch("{% url 'edit_solusi_post' %}", {
+         method: 'POST',
+         body: formData,
+         headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+         }
+      })
+      .then(response => response.json())
+      .then(data => {
+         if (data.status === 'success') {
+            alert(data.message);
+            toggleModal('editGejalaModal', false);
+            location.reload(); // Refresh halaman untuk memperbarui tabel
+         } else {
+            alert(data.message);
+         }
+      })
+      .catch(error => {
+         console.error('Error:', error);
+         alert('Terjadi kesalahan saat menyimpan perubahan.');
+      });
+   });
+   
+   // Fungsi hapus (opsional)
+   function hapusSolusi(solusiId) {
+      if (confirm('Apakah Anda yakin ingin menghapus solusi ini?')) {
+         alert('Fungsi hapus belum diimplementasikan.');
+      }
+   }
+</script> -->
+
+<!-- hapus data -->
+<script>
+   function hapusGejala(id) {
+      console.log('data id', id);
+      
+      if (confirm("Apakah Anda yakin ingin menghapus kerusakan ini?")) {
+         fetch("{% url 'hapus_solusi' %}", {
+            method: "POST",
+            body: JSON.stringify({ "id": id }),
+            headers: {
+               "X-CSRFToken": "{{ csrf_token }}",
+               "Content-Type": "application/json"
+            }
+         })
+            .then(response => response.json())
+            .then(data => {
+               if (data.status === "success") {
+                  location.reload();
+               }
+            })
+            .catch(error => console.error("Error:", error));
+      }
+   }
+</script>
+<!-- multipel delete -->
+<script>
+   // Select/Deselect All
+   document.getElementById("checkAll").addEventListener("change", function () {
+      const checkboxes = document.querySelectorAll(".rowCheckbox");
+      checkboxes.forEach(checkbox => {
+         checkbox.checked = this.checked;
+      });
+   });
+
+   // Handle Delete Action
+   document.getElementById("delete_checkbok").addEventListener("click", function () {
+      const selectedIds = Array.from(document.querySelectorAll(".rowCheckbox:checked"))
+         .map(checkbox => checkbox.value);
+
+      if (selectedIds.length === 0) {
+         alert("Pilih data yang ingin dihapus!");
+         return;
+      }
+
+      if (!confirm("Apakah Anda yakin ingin menghapus data yang dipilih?")) {
+         return;
+      }
+
+      // AJAX Request
+      fetch("{% url 'hapus_solusi_multiple' %}", {
+         method: "POST",
+         headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+         },
+         body: JSON.stringify({ ids: selectedIds })
+      })
+         .then(response => {
+            if (response.ok) {
+               window.location.reload(); // Reload page
+            } else {
+               alert("Terjadi kesalahan saat menghapus data.");
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- NOTIFIKASI  -->
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+      // Fungsi untuk menghapus elemen toast
+      function removeToast(toast) {
+         toast.style.transition = "opacity 0.5s ease-out";
+         toast.style.opacity = "0";
+         setTimeout(() => toast.remove(), 500); // Hapus dari DOM setelah efek fade-out
+      }
+
+      // Hapus pesan otomatis setelah 300 detik (300000 ms)
+      setTimeout(function () {
+         let toasts = document.querySelectorAll(".fixed.top-5.right-5.z-50 > div");
+         toasts.forEach(removeToast);
+      }, 3000);
+
+      // Event listener untuk tombol close
+      document.querySelectorAll("[data-dismiss-target]").forEach(button => {
+         button.addEventListener("click", function () {
+            let toast = this.closest("div[role='alert']");
+            if (toast) {
+               removeToast(toast);
+            }
+         });
+      });
+   });
+</script>
+{% endblock script %}
