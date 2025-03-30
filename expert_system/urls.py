@@ -58,14 +58,14 @@ urlpatterns = [
     path('dashboard/aturan/delete/multiple', views.hapus_aturan_multiple, name='hapus_aturan_multiple'),
     path('dashboard/aturan/filter_aturan', views.filter_aturan, name='filter_aturan'),
     path('get_gejala_kerusakan/', views.get_gejala_kerusakan, name='get_gejala_kerusakan'),
+    path('get_aturan/<int:aturan_id>/', views.get_aturan, name='get_aturan'),
     # SOLUSI
-    path('dashboard/solusi/', views.dsb_solusi, name='solusi'),
+    path('dashboard/solusi/', views.dsb_solusi, name='dsb_solusi'),
+    path('dashboard/solusi/edit/<int:id>/', views.edit_solusi, name='edit_solusi'),
     path('dashboard/solusi/add', views.tambah_solusi, name='tambah_solusi'),
-    path('solusi/edit/<int:solusi_id>/', views.edit_solusi, name='edit_solusi'),  # Untuk GET
-    path('solusi/edit/', views.edit_solusi, name='edit_solusi_post'),
     path('dashboard/solusi/delete', views.hapus_solusi, name='hapus_solusi'),
     path('dashboard/solusi/delete/multiple', views.hapus_solusi_multiple, name='hapus_solusi_multiple'),
-    path('dashboard/solusi/filter_solusi', views.filter_solusi, name='filter_solusi'),
+    path('dashboard/solusi/filter/', views.filter_solusi, name='filter_solusi'),
 
     path("dashboard/api/jenis-elektronik/", views.get_jenis_elektronik),
     path("dashboard/api/gejala/<int:jenis_id>/", views.get_gejala),

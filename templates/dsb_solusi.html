@@ -21,7 +21,7 @@
       </div>
       <!-- btn -->
       <div class="flex">
-         <button type="button" onclick="toggleModal(true)"
+         <button type="button" onclick="toggleModal('addGejalaModal', true)" 
             class="text-white bg-[#050708] focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center hover:bg-indigo-500 focus:ring-gray-600 me-2 mb-2 flex gap-2">
             <svg width="20" height="20" viewBox="0 0 416 416" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path
@@ -41,98 +41,79 @@
          
          Delete All Check
       </button>
-      <form>
-         <select id="filterJenis" class="text-sm rounded-lg block w-full p-2.5 text-black">
-            <option value="">Filter By Jenis</option>
-            {% for jenis in jenis_elektronik %}
-            <option value="{{ jenis.id }}">{{ jenis.nama }}</option>
-            {% endfor %}
-         </select>
-      </form>
-      <form>
-         <input type="text" id="filterGejala"
-            class="text-sm rounded-lg block w-full p-2.5 text-black"
-            placeholder="Cari Nama Kerusakan...">
-      </form>
+      <!-- Form Filter dan Pencarian -->
+      <div class="flex gap-4 mb-4">
+         <form>
+            <input type="text" id="filterGejala" class="text-sm rounded-lg block w-full p-2.5 text-black" placeholder="Cari Nama Solusi...">
+        </form>
+         <form>
+             <select id="filterJenis" class="text-sm rounded-lg block w-full p-2.5 text-black">
+                 <option value="">Filter By Kerusakan</option>
+                 {% for k in kerusakan %}
+                 <option value="{{ k.id }}">{{ k.nama_kerusakan }}</option>
+                 {% endfor %}
+             </select>
+         </form>
+         
+     </div>
+
    </div>
 
    <!-- tabel -->
    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left rtl:text-right text-gray-300">
-         <thead class="text-xl uppercas bg-gray-700 text-indigo-400">
-            <tr>
-               <th scope="col" class="px-6 py-3 text-center">
-                  KERUSAKAN
-               </th>
-               <th scope="col" class="px-6 py-3 text-center">
-                  SOLUSI
-               </th>
-               <th scope="col" class="px-6 py-3 text-center">
-                 DESKRIPSI
-               </th>
-               <th scope="col" class="px-6 py-3 text-center">
-                  REKOMENDASI
-               </th>
-               <th scope="col" class="px-6 py-3 text-center">
-                  BIAYA PERBAIKAN
-               </th>
-               <th scope="col" class="px-6 py-3 text-center">
-                  WAKTU PERBAIKAN
-               </th>
-               <th scope="col" class="text-center px-6 py-3 flex justify-center items-center gap-6">
-                  <p>Action</p>
-                  <input id="checkAll" type="checkbox" value=""
-                     class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
-               </th>
-            </tr>
+         <thead class="text-xl uppercase bg-gray-700 text-indigo-400">
+             <tr>
+                 <th scope="col" class="px-6 py-3 text-center">KERUSAKAN</th>
+                 <th scope="col" class="px-6 py-3 text-center">SOLUSI</th>
+                 <th scope="col" class="px-6 py-3 text-center">DESKRIPSI</th>
+                 <th scope="col" class="px-6 py-3 text-center">REKOMENDASI</th>
+                 <th scope="col" class="px-6 py-3 text-center">BIAYA PERBAIKAN</th>
+                 <th scope="col" class="px-6 py-3 text-center">WAKTU PERBAIKAN</th>
+                 <th scope="col" class="text-center px-6 py-3 flex justify-center items-center gap-6">
+                     <p>Action</p>
+                     <input id="checkAll" type="checkbox" value="" class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+                 </th>
+             </tr>
          </thead>
-         <tbody>
-            {% for data in solusi %}
-            <tr
-               class="border-b bg-gray-800  border-gray-500  hover:bg-gray-600">
-               <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
-                  <span class="text-yellow-400 font-semibold">{{data.kerusakan.kodeRsk}}</span> |
-                  {{data.kerusakan}}
-               </th>
-               <td class="px-6 py-4">
-                  {{data.nama_solusi}}
-               </td>
-               <td class="px-6 py-4">
-                  {{data.deskripsi}}
-               </td>
-               <td class="px-6 py-4 text-center">
-                  {{data.is_recommended}}
-               </td>
-               <td class="px-6 py-4 text-center">
-                  {{data.biaya_perbaikan}} k
-               </td>
-               <td class="px-6 py-4 text-center">
-                  {{data.waktu_perbaikan}} menit
-               </td>
-               <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
-                  <a href="#" onclick="editSolusi('{{ data.id }}')" class="text-indigo-400 hover:text-yellow-400">Edit</a>
-                  <a href="#" onclick="hapusGejala('{{ data.id }}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
-                  <input type="checkbox" value="{{ data.id }}"
-                     class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
-               </td>
-            </tr>
-            {% endfor %}
+         <tbody id="solusiTableBody">
+             {% for data in solusi %}
+             <tr class="border-b bg-gray-800 border-gray-500 hover:bg-gray-600">
+                 <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                     <span class="text-yellow-400 font-semibold">{{ data.kerusakan.kodeRsk }}</span> | {{ data.kerusakan }}
+                 </th>
+                 <td class="px-6 py-4">{{ data.nama_solusi }}</td>
+                 <td class="px-6 py-4">{{ data.deskripsi }}</td>
+                 <td class="px-6 py-4 text-center">{{ data.is_recommended }}</td>
+                 <td class="px-6 py-4 text-center">{{ data.biaya_perbaikan }} k</td>
+                 <td class="px-6 py-4 text-center">{{ data.waktu_perbaikan|default:"-" }} menit</td>
+                 <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
+                     <a href="#" onclick="editSolusi('{{ data.id }}')" class="text-indigo-400 hover:text-yellow-400">Edit</a>
+                     <a href="#" onclick="hapusGejala('{{ data.id }}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
+                     <input type="checkbox" value="{{ data.id }}" class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+                 </td>
+             </tr>
+             {% empty %}
+             <tr>
+                 <td colspan="7" class="px-6 py-4 text-center text-gray-400">Tidak ada data solusi.</td>
+             </tr>
+             {% endfor %}
          </tbody>
-      </table>
+     </table>
    </div>
 </div>
 
 <!-- MODAL -------------------------------------------------------------------------- -->
 
-<!-- Modal Tambah solusi -->
+<!-- Modal Tambah Solusi -->
 <div id="addGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
    <div class="bg-gray-700 rounded-lg shadow-lg w-96 p-6">
       <h2 class="text-xl font-bold mb-4 text-white">Tambah Solusi</h2>
-      <form id="add_solusi" >
+      <form id="addSolusiForm" method="POST">
          {% csrf_token %}
          <div class="mb-3">
-            <label for="kerusakan" class="block text-sm font-medium text-white">Kerusakan</label>
-            <select id="kerusakan" name="kerusakan" required class="w-full p-2 border rounded">
+            <label for="kerusakan_add" class="block text-sm font-medium text-white">Kerusakan</label>
+            <select id="kerusakan_add" name="kerusakan" required class="w-full p-2 border rounded text-gray-800">
                <option value="">Pilih Kerusakan</option>
                {% for k in kerusakan %}
                <option value="{{ k.id }}">{{ k.kodeRsk }} | {{ k.nama_kerusakan }}</option>
@@ -140,38 +121,39 @@
             </select>
          </div>
          <div class="mb-3">
-            <label for="nama_solusi" class="block text-sm font-medium text-white">Nama Solusi</label>
-            <input type="text" id="nama_solusi" name="nama_solusi" required class="w-full p-2 border rounded">
+            <label for="nama_solusi_add" class="block text-sm font-medium text-white">Nama Solusi</label>
+            <input type="text" id="nama_solusi_add" name="nama_solusi" required class="w-full p-2 border rounded text-gray-800">
          </div>
          <div class="mb-3">
-            <label for="deskripsi" class="block text-sm font-medium text-white">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi" required class="w-full p-2 border rounded"></textarea>
+            <label for="deskripsi_add" class="block text-sm font-medium text-white">Deskripsi</label>
+            <textarea id="deskripsi_add" name="deskripsi" required class="w-full p-2 border rounded text-gray-800"></textarea>
          </div>
          <div class="mb-3">
-            <label for="biaya_perbaikan" class="block text-sm font-medium text-white">Biaya Perbaikan (Rp)</label>
-            <input type="number" id="biaya_perbaikan" name="biaya_perbaikan" min="0" class="w-full p-2 border rounded">
+            <label for="biaya_perbaikan_add" class="block text-sm font-medium text-white">Biaya Perbaikan (Rp)</label>
+            <input type="number" id="biaya_perbaikan_add" name="biaya_perbaikan" min="0" class="w-full p-2 border rounded text-gray-800">
          </div>
          <div class="mb-3">
-            <label for="waktu_perbaikan" class="block text-sm font-medium text-white">Waktu Perbaikan</label>
-            <input type="text" id="waktu_perbaikan" name="waktu_perbaikan" class="w-full p-2 border rounded">
+            <label for="waktu_perbaikan_add" class="block text-sm font-medium text-white">Waktu Perbaikan</label>
+            <input type="text" id="waktu_perbaikan_add" name="waktu_perbaikan" class="w-full p-2 border rounded text-gray-800">
          </div>
          <div class="flex justify-end gap-2">
-            <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="button" onclick="toggleModal('addGejalaModal', false)" class="px-4 py-2 bg-gray-400 rounded text-white">Batal</button>
             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
          </div>
       </form>
    </div>
 </div>
-<!-- EDIT MODAL -->
-<div id="editGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+
+<!-- Modal Edit Solusi -->
+<div id="editSolusiModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
    <div class="bg-gray-700 text-gray-800 rounded-lg shadow-lg w-96 p-6">
-      <h2 class="text-xl font-bold mb-4">Edit Solusi</h2>
-      <form id="edit_solusi">
+      <h2 class="text-xl font-bold mb-4 text-white">Edit Solusi</h2>
+      <form id="editSolusiForm" method="POST">
          {% csrf_token %}
          <input type="hidden" id="solusi_id" name="solusi_id">
          <div class="mb-3">
-            <label for="kerusakan" class="block text-sm font-medium text-white">Kerusakan</label>
-            <select id="kerusakan" name="kerusakan" required class="w-full p-2 border rounded">
+            <label for="kerusakan_edit" class="block text-sm font-medium text-white">Kerusakan</label>
+            <select id="kerusakan_edit" name="kerusakan" required class="w-full p-2 border rounded text-gray-800">
                <option value="">Pilih Kerusakan</option>
                {% for k in kerusakan %}
                <option value="{{ k.id }}">{{ k.nama_kerusakan }}</option>
@@ -179,23 +161,23 @@
             </select>
          </div>
          <div class="mb-3">
-            <label for="nama_solusi" class="block text-sm font-medium text-white">Nama Solusi</label>
-            <input type="text" id="nama_solusi" name="nama_solusi" required class="w-full p-2 border rounded">
+            <label for="nama_solusi_edit" class="block text-sm font-medium text-white">Nama Solusi</label>
+            <input type="text" id="nama_solusi_edit" name="nama_solusi" required class="w-full p-2 border rounded text-gray-800">
          </div>
          <div class="mb-3">
-            <label for="deskripsi" class="block text-sm font-medium text-white">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi" required class="w-full p-2 border rounded"></textarea>
+            <label for="deskripsi_edit" class="block text-sm font-medium text-white">Deskripsi</label>
+            <textarea id="deskripsi_edit" name="deskripsi" required class="w-full p-2 border rounded text-gray-800"></textarea>
          </div>
          <div class="mb-3">
-            <label for="biaya_perbaikan" class="block text-sm font-medium text-white">Biaya Perbaikan (Rp)</label>
-            <input type="number" id="biaya_perbaikan" name="biaya_perbaikan" min="0" class="w-full p-2 border rounded">
+            <label for="biaya_perbaikan_edit" class="block text-sm font-medium text-white">Biaya Perbaikan (Rp)</label>
+            <input type="number" id="biaya_perbaikan_edit" name="biaya_perbaikan" min="0" class="w-full p-2 border rounded text-gray-800">
          </div>
          <div class="mb-3">
-            <label for="waktu_perbaikan" class="block text-sm font-medium text-white">Waktu Perbaikan</label>
-            <input type="text" id="waktu_perbaikan" name="waktu_perbaikan" class="w-full p-2 border rounded">
+            <label for="waktu_perbaikan_edit" class="block text-sm font-medium text-white">Waktu Perbaikan</label>
+            <input type="text" id="waktu_perbaikan_edit" name="waktu_perbaikan" class="w-full p-2 border rounded text-gray-800">
          </div>
          <div class="flex justify-end gap-2">
-            <button type="button" onclick="toggleModal('editGejalaModal', false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="button" onclick="toggleModal('editSolusiModal', false)" class="px-4 py-2 bg-gray-400 rounded text-white">Batal</button>
             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
          </div>
       </form>
@@ -268,103 +250,110 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- add data -->
 <script>
-   function toggleModal(show) {
-      document.getElementById('addGejalaModal').classList.toggle('hidden', !show);
+// Fungsi toggleModal yang konsisten
+function toggleModal(modalId, show) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.toggle('hidden', !show);
+    } else {
+        console.error(`Modal dengan ID ${modalId} tidak ditemukan!`);
+    }
+}
+
+// Tambah Solusi
+document.getElementById('addSolusiForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch("{% url 'tambah_solusi' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            toggleModal('addGejalaModal', false); // Tutup modal
+            window.location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menyimpan data.');
+    });
+});
+</script>
+<!-- edit data -->
+<script>
+   function toggleModal(modalId, show) {
+       const modal = document.getElementById(modalId);
+       if (modal) {
+           modal.classList.toggle('hidden', !show);
+       } else {
+           console.error(`Modal dengan ID ${modalId} tidak ditemukan!`);
+       }
    }
    
-   document.getElementById('add_solusi').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
+   function editSolusi(id) {
+       fetch("{% url 'edit_solusi' id=99999 %}".replace('99999', id), {
+           method: "GET",
+           headers: {
+               "X-CSRFToken": "{{ csrf_token }}",
+               "Content-Type": "application/json"
+           }
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error(`HTTP error! Status: ${response.status}`);
+           }
+           return response.json();
+       })
+       .then(data => {
+           document.getElementById("solusi_id").value = data.id;
+           document.getElementById("kerusakan_edit").value = data.kerusakan_id;
+           document.getElementById("nama_solusi_edit").value = data.nama_solusi;
+           document.getElementById("deskripsi_edit").value = data.deskripsi;
+           document.getElementById("biaya_perbaikan_edit").value = data.biaya_perbaikan;
+           document.getElementById("waktu_perbaikan_edit").value = data.waktu_perbaikan;
    
-      fetch("{% url 'tambah_solusi' %}", {
-         method: 'POST',
-         body: formData,
-         headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-         }
-      })
-      .then(response => response.json())
-      .then(data => {
-         if (data.status === 'success') {
-            toggleModal(false); // Tutup modal
-            window.location.reload();
-            // Opsional: Tambahkan logika untuk memperbarui UI tanpa refresh
-         } else {
-            alert(data.message);
-         }
-      })
-      .catch(error => {
-         console.error('Error:', error);
-         alert('Terjadi kesalahan saat menyimpan data.');
-      });
+           toggleModal('editSolusiModal', true);
+       })
+       .catch(error => console.error("Error:", error));
+   }
+   
+   document.getElementById("editSolusiForm").addEventListener("submit", function (event) {
+       event.preventDefault();
+       let formData = new FormData(this);
+       let submitButton = this.querySelector("button[type='submit']");
+       submitButton.disabled = true;
+   
+       const solusiId = document.getElementById('solusi_id').value;
+       fetch("{% url 'edit_solusi' id=99999 %}".replace('99999', solusiId), {
+           method: "POST",
+           body: formData,
+           headers: {
+               "X-CSRFToken": "{{ csrf_token }}"
+           }
+       })
+       .then(response => response.json())
+       .then(data => {
+           if (data.status === "success") {
+               toggleModal('editSolusiModal', false);
+               window.location.reload();
+           } else {
+               alert(data.message);
+           }
+       })
+       .catch(error => console.error("Error:", error))
+       .finally(() => {
+           submitButton.disabled = false;
+       });
    });
 </script>
-<!-- EDIT -->
-<!-- <script>
-   // function toggleModal(modalId, show) {
-   //    document.getElementById(modalId).classList.toggle('hidden', !show);
-   // }
-   
-   // Fungsi untuk membuka modal edit dan mengisi data
-   function editSolusi(solusiId) {
-      fetch(`{% url 'edit_solusi' 0 %}`.replace('0', solusiId))
-         .then(response => response.json())
-         .then(data => {
-            if (data.status === 'success') {
-               const solusi = data.solusi;
-               document.getElementById('solusi_id').value = solusi.id;
-               document.getElementById('kerusakan').value = solusi.kerusakan_id;
-               document.getElementById('nama_solusi').value = solusi.nama_solusi;
-               document.getElementById('deskripsi').value = solusi.deskripsi;
-               document.getElementById('biaya_perbaikan').value = solusi.biaya_perbaikan;
-               document.getElementById('waktu_perbaikan').value = solusi.waktu_perbaikan;
-               toggleModal('editGejalaModal', true);
-            } else {
-               alert(data.message);
-            }
-         })
-         .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat mengambil data solusi.');
-         });
-   }
-   
-   // Fungsi untuk submit form edit
-   document.getElementById('edit_solusi').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-   
-      fetch("{% url 'edit_solusi_post' %}", {
-         method: 'POST',
-         body: formData,
-         headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-         }
-      })
-      .then(response => response.json())
-      .then(data => {
-         if (data.status === 'success') {
-            alert(data.message);
-            toggleModal('editGejalaModal', false);
-            location.reload(); // Refresh halaman untuk memperbarui tabel
-         } else {
-            alert(data.message);
-         }
-      })
-      .catch(error => {
-         console.error('Error:', error);
-         alert('Terjadi kesalahan saat menyimpan perubahan.');
-      });
-   });
-   
-   // Fungsi hapus (opsional)
-   function hapusSolusi(solusiId) {
-      if (confirm('Apakah Anda yakin ingin menghapus solusi ini?')) {
-         alert('Fungsi hapus belum diimplementasikan.');
-      }
-   }
-</script> -->
-
 <!-- hapus data -->
 <script>
    function hapusGejala(id) {
@@ -431,6 +420,58 @@
          })
          .catch(error => console.error("Error:", error));
    });
+</script>
+<!--filter -->
+<script>
+   function fetchFilteredData() {
+       const kerusakanId = document.getElementById('filterJenis').value;
+       const namaQuery = document.getElementById('filterGejala').value;
+       const tbody = document.getElementById('solusiTableBody');
+   
+       fetch(`{% url 'filter_solusi' %}?kerusakan=${kerusakanId}&nama_solusi=${namaQuery}`, {
+           method: 'GET',
+           headers: {
+               "X-CSRFToken": "{{ csrf_token }}",
+               "Content-Type": "application/json"
+           }
+       })
+       .then(response => response.json())
+       .then(data => {
+           console.log(data);
+           tbody.innerHTML = "";
+   
+           if (data.solusi.length === 0) {
+               tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-4 text-center text-gray-400">Tidak ada data solusi.</td></tr>`;
+           } else {
+               data.solusi.forEach(item => {
+                   const row = `
+                       <tr class="border-b bg-gray-800 border-gray-500 hover:bg-gray-600">
+                           <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                               <span class="text-yellow-400 font-semibold">${item.kerusakan.kodeRsk}</span> | ${item.kerusakan.nama}
+                           </th>
+                           <td class="px-6 py-4">${item.nama_solusi}</td>
+                           <td class="px-6 py-4">${item.deskripsi}</td>
+                           <td class="px-6 py-4 text-center">${item.is_recommended}</td>
+                           <td class="px-6 py-4 text-center">${item.biaya_perbaikan} k</td>
+                           <td class="px-6 py-4 text-center">${item.waktu_perbaikan} menit</td>
+                           <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
+                              <a href="#" onclick="editSolusi('${item.id}')" class="text-indigo-400 hover:text-yellow-400">Edit</a>
+                              <a href="#" onclick="hapusGejala('${item.id}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
+                              <input type="checkbox" value="${item.id}" class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+                           </td>
+                       </tr>`;
+                   tbody.innerHTML += row;
+               });
+           }
+       })
+       .catch(error => console.error("Error:", error));
+   }
+   
+   document.getElementById('filterJenis').addEventListener('change', fetchFilteredData);
+   document.getElementById('filterGejala').addEventListener('keyup', fetchFilteredData);
+   
+   // Panggil pertama kali untuk muat data awal
+   fetchFilteredData();
 </script>
 <!-- NOTIFIKASI  -->
 <script>

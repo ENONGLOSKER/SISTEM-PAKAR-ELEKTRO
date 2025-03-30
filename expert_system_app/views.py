@@ -115,7 +115,7 @@ def diagnose(request):
             diagnosa = Diagnosa.objects.create(
                 jenis_elektronik_id=jenis_id,
                 catatan="Diagnosa otomatis dengan multiple kerusakan",
-                solusi=" - ".join([f"{v['nama']}: {v['solusi']}" for v in hasil_diagnosa.values()])
+                solusi="\n".join([f"{v['nama']}: {v['solusi']}" for v in hasil_diagnosa.values()])
             )
             diagnosa.gejala.set(gejala_ids)
 
@@ -523,6 +523,13 @@ def get_gejala_kerusakan(request):
 
     return JsonResponse({"gejalas": [], "kerusakans": []})
 
+def get_aturan(request, aturan_id):
+    aturan = get_object_or_404(Aturan, id=aturan_id)
+    data = {
+        "gejala_ids": list(aturan.gejala.values_list('id', flat=True)),
+        "kerusakan_sebelumnya_ids": list(aturan.kerusakan_sebelumnya.values_list('id', flat=True)),
+    }
+    return JsonResponse(data)
 @login_required()
 def dsb_aturan(request):
     data = Aturan.objects.all().order_by('-id')
@@ -541,20 +548,32 @@ def tambah_aturan(request):
     if request.method == "POST":
         jenis_elektronik_id = request.POST.get("jenis_elektronik")
         gejala_ids = request.POST.getlist("gejala[]")
+        kerusakan_sebelumnya_ids = request.POST.getlist("kerusakan_sebelumnya[]")  # Tambah ini
         kerusakan_id = request.POST.get("kodeRsk")
 
-        if not jenis_elektronik_id or not gejala_ids or not kerusakan_id:
-            return JsonResponse({"status": "error", "message": "Semua field harus diisi!"}, status=400)
+        # Validasi input
+        if not jenis_elektronik_id or not kerusakan_id:
+            return JsonResponse({"status": "error", "message": "Jenis elektronik dan kerusakan harus diisi!"}, status=400)
 
         try:
             jenis_elektronik = JenisElektronik.objects.get(id=jenis_elektronik_id)
             kerusakan = Kerusakan.objects.get(id=kerusakan_id)
+
+            # Buat aturan baru
             aturan = Aturan.objects.create(
                 jenis_elektronik=jenis_elektronik,
                 kerusakan=kerusakan
             )
-            aturan.gejala.set(Gejala.objects.filter(id__in=gejala_ids))
-            messages.success(request, "Data berhasil di tambah.")
+
+            # Set gejala (opsional, boleh kosong)
+            if gejala_ids:
+                aturan.gejala.set(Gejala.objects.filter(id__in=gejala_ids))
+
+            # Set kerusakan sebelumnya (opsional, boleh kosong)
+            if kerusakan_sebelumnya_ids:
+                aturan.kerusakan_sebelumnya.set(Kerusakan.objects.filter(id__in=kerusakan_sebelumnya_ids))
+
+            messages.success(request, "Data berhasil ditambah.")
             return JsonResponse({"status": "success"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": f"Terjadi kesalahan: {str(e)}"}, status=500)
@@ -566,16 +585,24 @@ def edit_aturan(request):
         aturan_id = request.POST.get("id")
         jenis_elektronik_id = request.POST.get("jenis_elektronik")
         gejala_ids = request.POST.getlist("gejala[]")
+        kerusakan_sebelumnya_ids = request.POST.getlist("kerusakan_sebelumnya[]")  # Tambah ini
         kerusakan_id = request.POST.get("kodeRsk")
 
-        if not aturan_id or not jenis_elektronik_id or not gejala_ids or not kerusakan_id:
-            return JsonResponse({"status": "error", "message": "Semua field harus diisi!"}, status=400)
+        # Validasi input
+        if not aturan_id or not jenis_elektronik_id or not kerusakan_id:
+            return JsonResponse({"status": "error", "message": "Semua field wajib harus diisi!"}, status=400)
 
         try:
             aturan = get_object_or_404(Aturan, id=aturan_id)
             aturan.jenis_elektronik = JenisElektronik.objects.get(id=jenis_elektronik_id)
             aturan.kerusakan = Kerusakan.objects.get(id=kerusakan_id)
-            aturan.gejala.set(Gejala.objects.filter(id__in=gejala_ids))
+
+            # Update gejala
+            aturan.gejala.set(Gejala.objects.filter(id__in=gejala_ids) if gejala_ids else [])
+
+            # Update kerusakan sebelumnya
+            aturan.kerusakan_sebelumnya.set(Kerusakan.objects.filter(id__in=kerusakan_sebelumnya_ids) if kerusakan_sebelumnya_ids else [])
+
             aturan.save()
             messages.success(request, "Data berhasil diperbarui!")
             return JsonResponse({"status": "success", "message": "Aturan berhasil diperbarui!"})
@@ -616,14 +643,21 @@ def filter_aturan(request):
     jenis_elektronik_id = request.GET.get('jenis_elektronik')
     kerusakan_query = request.GET.get('kerusakan')
 
-    filtered_data = Aturan.objects.select_related('jenis_elektronik', 'kerusakan').prefetch_related('gejala').all()
+    # Query awal dengan optimasi
+    filtered_data = Aturan.objects.select_related('jenis_elektronik', 'kerusakan').prefetch_related('gejala', 'kerusakan_sebelumnya').all()
 
+    # Filter berdasarkan jenis elektronik
     if jenis_elektronik_id:
         filtered_data = filtered_data.filter(jenis_elektronik_id=jenis_elektronik_id)
 
+    # Filter berdasarkan nama kerusakan (kerusakan utama atau kerusakan sebelumnya)
     if kerusakan_query:
-        filtered_data = filtered_data.filter(kerusakan__nama_kerusakan__icontains=kerusakan_query)
+        filtered_data = filtered_data.filter(
+            models.Q(kerusakan__nama_kerusakan__icontains=kerusakan_query) |
+            models.Q(kerusakan_sebelumnya__nama_kerusakan__icontains=kerusakan_query)
+        ).distinct()
 
+    # Siapkan data untuk JSON
     data = []
     for aturan in filtered_data:
         data.append({
@@ -632,6 +666,7 @@ def filter_aturan(request):
             "gejala": [{"kodeGjl": g.kodeGjl, "nama": g.nama} for g in aturan.gejala.all()],
             "kerusakan": aturan.kerusakan.nama_kerusakan,
             "kodeRsk": aturan.kerusakan.kodeRsk,
+            "kerusakan_sebelumnya": [{"kodeRsk": k.kodeRsk, "nama": k.nama_kerusakan} for k in aturan.kerusakan_sebelumnya.all()],
         })
 
     return JsonResponse({'aturan': data})
@@ -639,122 +674,87 @@ def filter_aturan(request):
 # SOLUSI ============================================
 @login_required
 def dsb_solusi(request):
-    """ Menampilkan semua solusi """
+    """Menampilkan semua solusi"""
     data = Solusi.objects.all().order_by('-id')
     kerusakan = Kerusakan.objects.all()
     context = {
         'solusi': data,
         'kerusakan': kerusakan,
-        }
+    }
     return render(request, 'dsb_solusi.html', context)
+
 @login_required
-def tambah_solusi(request):
-    try:
-        # Ambil data dari form
-        kerusakan_id = request.POST.get('kerusakan')
-        nama_solusi = request.POST.get('nama_solusi')
-        deskripsi = request.POST.get('deskripsi')
-        biaya_perbaikan = request.POST.get('biaya_perbaikan', 0)  # Default 0 jika kosong
-        waktu_perbaikan = request.POST.get('waktu_perbaikan', None)  # Null jika kosong
+def edit_solusi(request, id):
+    solusi = get_object_or_404(Solusi, id=id)
+
+    if request.method == "GET":
+        # Mengembalikan data solusi untuk diisi di modal via AJAX
+        data = {
+            "id": solusi.id,
+            "kerusakan_id": solusi.kerusakan.id,
+            "nama_solusi": solusi.nama_solusi,
+            "deskripsi": solusi.deskripsi,
+            "biaya_perbaikan": solusi.biaya_perbaikan,
+            "waktu_perbaikan": solusi.waktu_perbaikan or "",
+        }
+        return JsonResponse(data)
+
+    elif request.method == "POST":
+        # Proses penyimpanan perubahan via AJAX
+        kerusakan_id = request.POST.get("kerusakan")
+        nama_solusi = request.POST.get("nama_solusi")
+        deskripsi = request.POST.get("deskripsi")
+        biaya_perbaikan = request.POST.get("biaya_perbaikan")
+        waktu_perbaikan = request.POST.get("waktu_perbaikan")
 
         # Validasi input
-        if not kerusakan_id or not nama_solusi or not deskripsi:
-            return JsonResponse({'status': 'error', 'message': 'Semua kolom wajib diisi kecuali biaya dan waktu!'}, status=400)
+        if not all([kerusakan_id, nama_solusi, deskripsi]):
+            return JsonResponse({"status": "error", "message": "Kerusakan, nama solusi, dan deskripsi harus diisi!"}, status=400)
 
-        # Ambil objek Kerusakan berdasarkan ID
-        kerusakan = Kerusakan.objects.get(id=kerusakan_id)
-
-        # Buat objek Solusi baru
-        solusi = Solusi.objects.create(
-            kerusakan=kerusakan,
-            nama_solusi=nama_solusi,
-            deskripsi=deskripsi, # Default, bisa ditambahkan checkbox di form jika perlu
-            biaya_perbaikan=int(biaya_perbaikan) if biaya_perbaikan else 0,
-            waktu_perbaikan=waktu_perbaikan if waktu_perbaikan else None
-        )
-
-        # Kembalikan respons sukses
-        messages.success(request, "Data berhasil di tambah.")
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Solusi berhasil ditambahkan!',
-            'solusi': {
-                'id': solusi.id,
-                'nama_solusi': solusi.nama_solusi,
-                'kerusakan': solusi.kerusakan.nama_kerusakan
-            }
-        })
-
-    except Kerusakan.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Kerusakan tidak ditemukan!'}, status=404)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': f'Terjadi kesalahan: {str(e)}'}, status=500)
-
-def edit_solusi(request, solusi_id=None):
-    if request.method == 'GET':
-        # Mengambil data solusi untuk diedit
-        solusi = get_object_or_404(Solusi, id=solusi_id)
-        data = {
-            'id': solusi.id,
-            'kerusakan_id': solusi.kerusakan.id,
-            'nama_solusi': solusi.nama_solusi,
-            'deskripsi': solusi.deskripsi,
-            'biaya_perbaikan': solusi.biaya_perbaikan,
-            'waktu_perbaikan': solusi.waktu_perbaikan or '',
-            'is_recommended': solusi.is_recommended
-        }
-        return JsonResponse({'status': 'success', 'solusi': data})
-
-    elif request.method == 'POST':
-        # Menyimpan perubahan data solusi
         try:
-            solusi_id = request.POST.get('solusi_id')
-            kerusakan_id = request.POST.get('kerusakan')
-            nama_solusi = request.POST.get('nama_solusi')
-            deskripsi = request.POST.get('deskripsi')
-            biaya_perbaikan = request.POST.get('biaya_perbaikan', 0)
-            waktu_perbaikan = request.POST.get('waktu_perbaikan', None)
-
-            # Validasi input
-            if not solusi_id or not kerusakan_id or not nama_solusi or not deskripsi:
-                return JsonResponse({'status': 'error', 'message': 'Semua kolom wajib diisi kecuali biaya dan waktu!'}, status=400)
-
-            # Ambil objek Solusi dan Kerusakan
-            solusi = get_object_or_404(Solusi, id=solusi_id)
-            kerusakan = get_object_or_404(Kerusakan, id=kerusakan_id)
-
-            # Update data solusi
-            solusi.kerusakan = kerusakan
+            solusi.kerusakan = Kerusakan.objects.get(id=kerusakan_id)
             solusi.nama_solusi = nama_solusi
             solusi.deskripsi = deskripsi
             solusi.biaya_perbaikan = int(biaya_perbaikan) if biaya_perbaikan else 0
             solusi.waktu_perbaikan = waktu_perbaikan if waktu_perbaikan else None
             solusi.save()
 
-            # Kembalikan respons sukses
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Solusi berhasil diperbarui!',
-                'solusi': {
-                    'id': solusi.id,
-                    'kerusakan': solusi.kerusakan.nama_kerusakan,
-                    'nama_solusi': solusi.nama_solusi,
-                    'deskripsi': solusi.deskripsi,
-                    'biaya_perbaikan': solusi.biaya_perbaikan,
-                    'waktu_perbaikan': solusi.waktu_perbaikan
-                }
-            })
-
-        except Solusi.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Solusi tidak ditemukan!'}, status=404)
-        except Kerusakan.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Kerusakan tidak ditemukan!'}, status=404)
+            messages.success(request, "Solusi berhasil diperbarui!")
+            return JsonResponse({"status": "success", "message": "Solusi berhasil diperbarui!"})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': f'Terjadi kesalahan: {str(e)}'}, status=500)
+            return JsonResponse({"status": "error", "message": f"Terjadi kesalahan: {str(e)}"}, status=500)
 
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Metode HTTP tidak didukung!'}, status=405)
+    return JsonResponse({"status": "error", "message": "Metode tidak diizinkan"}, status=405)
 
+@login_required
+def tambah_solusi(request):
+    if request.method == "POST":
+        kerusakan_id = request.POST.get("kerusakan")
+        nama_solusi = request.POST.get("nama_solusi")
+        deskripsi = request.POST.get("deskripsi")
+        biaya_perbaikan = request.POST.get("biaya_perbaikan")
+        waktu_perbaikan = request.POST.get("waktu_perbaikan")
+
+        # Validasi input
+        if not all([kerusakan_id, nama_solusi, deskripsi]):
+            return JsonResponse({"status": "error", "message": "Kerusakan, nama solusi, dan deskripsi harus diisi!"}, status=400)
+
+        try:
+            kerusakan = Kerusakan.objects.get(id=kerusakan_id)
+            solusi = Solusi.objects.create(
+                kerusakan=kerusakan,
+                nama_solusi=nama_solusi,
+                deskripsi=deskripsi,
+                biaya_perbaikan=int(biaya_perbaikan) if biaya_perbaikan else 0,
+                waktu_perbaikan=waktu_perbaikan if waktu_perbaikan else None,
+                is_recommended=True  # Default value
+            )
+            messages.success(request, "Solusi berhasil ditambahkan!")
+            return JsonResponse({"status": "success", "message": "Solusi berhasil ditambahkan!"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": f"Terjadi kesalahan: {str(e)}"}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Metode tidak diizinkan"}, status=405)
 @login_required
 @csrf_exempt
 def hapus_solusi(request):
@@ -769,7 +769,6 @@ def hapus_solusi(request):
         return JsonResponse({"status": "success", "message": "Solusi berhasil dihapus!"})
 
     return JsonResponse({"status": "error", "message": "Metode tidak diperbolehkan!"})
-
 @login_required
 @csrf_exempt
 def hapus_solusi_multiple(request):
@@ -786,28 +785,40 @@ def hapus_solusi_multiple(request):
         return JsonResponse({"error": "Tidak ada data yang dipilih."}, status=400)
 
     return JsonResponse({"error": "Metode tidak valid."}, status=405)
-
 @login_required
 def filter_solusi(request):
-    """ Filter solusi berdasarkan jenis elektronik atau nama solusi """
-    jenis_elektronik_id = request.GET.get('jenis_elektronik')
-    nama_solusi = request.GET.get('nama_solusi')
+    """Filter dan cari data solusi"""
+    kerusakan_id = request.GET.get('kerusakan')
+    nama_query = request.GET.get('nama_solusi')
 
-    filtered_data = Solusi.objects.all()
+    # Query awal dengan optimasi
+    filtered_data = Solusi.objects.select_related('kerusakan').all().order_by('-id')
 
-    if jenis_elektronik_id:
-        filtered_data = filtered_data.filter(kerusakan__jenis_elektronik_id=jenis_elektronik_id)
-    
-    if nama_solusi:
-        filtered_data = filtered_data.filter(nama_solusi__icontains=nama_solusi)
+    # Filter berdasarkan kerusakan
+    if kerusakan_id:
+        filtered_data = filtered_data.filter(kerusakan_id=kerusakan_id)
 
-    data = list(filtered_data.values(
-        'id', 'kerusakan__jenis_elektronik__nama', 'kerusakan__kodeRsk',
-        'nama_solusi', 'deskripsi', 'is_recommended', 'biaya_perbaikan', 'waktu_perbaikan'
-    ))
+    # Pencarian berdasarkan nama solusi
+    if nama_query:
+        filtered_data = filtered_data.filter(nama_solusi__icontains=nama_query)
+
+    # Siapkan data untuk JSON
+    data = []
+    for solusi in filtered_data:
+        data.append({
+            "id": solusi.id,
+            "kerusakan": {
+                "kodeRsk": solusi.kerusakan.kodeRsk,
+                "nama": solusi.kerusakan.nama_kerusakan
+            },
+            "nama_solusi": solusi.nama_solusi,
+            "deskripsi": solusi.deskripsi,
+            "is_recommended": solusi.is_recommended,
+            "biaya_perbaikan": solusi.biaya_perbaikan,
+            "waktu_perbaikan": solusi.waktu_perbaikan or "-"
+        })
 
     return JsonResponse({'solusi': data})
-
 def index(request):
     return render(request, 'index.html')
 @login_required()
@@ -815,6 +826,9 @@ def dashboard(request):
     jenis = JenisElektronik.objects.count()
     gejala = Gejala.objects.count()
     kerusakan = Kerusakan.objects.count()
+    aturan = Aturan.objects.count()
+    solusi = Solusi.objects.count()
+
     diagnosa = Diagnosa.objects.all()
     diagnosa_terakhir = Diagnosa.objects.order_by('-tanggal_diagnosa').first()
 
@@ -828,6 +842,9 @@ def dashboard(request):
         'jenis_count': jenis,
         'gejala_count': gejala,
         'kerusakan_count': kerusakan,
+        'kerusakan_count': kerusakan,
+        'aturan_count': aturan,
+        'solusi_count': solusi,
         'diagnosa': diagnosa,
         'diagnosa_terakhir': diagnosa_terakhir,
         'akurasi_rata_rata': akurasi_rata_rata,

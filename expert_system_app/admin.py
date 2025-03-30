@@ -7,4 +7,3 @@ admin.site.register(Kerusakan)
 admin.site.register(Aturan)
 admin.site.register(Diagnosa)
 admin.site.register(Solusi)
-

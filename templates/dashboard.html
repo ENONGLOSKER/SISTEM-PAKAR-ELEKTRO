@@ -128,7 +128,6 @@
                <table class="w-full text-sm text-left rtl:text-right text-gray-700 border-collapse">
                   <thead class="text-base uppercase bg-slate-100 text-indigo-600">
                      <tr>
-                        <th scope="col" class="px-4 py-3">GEJALA</th>
                         <th scope="col" class="px-4 py-3">KERUSAKAN</th>
                         <th scope="col" class="px-8 py-3 text-center">SOLUSI</th>
                         <th scope="col" class="px-4 py-3">DESKRIPSI</th>
@@ -139,15 +138,6 @@
                   <tbody>
                      {% for dk in diagnosa_terakhir.diagnosa_kerusakan.all %}
                      <tr class="border-b border-gray-300 bg-gray-50 hover:bg-gray-200">
-                        <td class="px-4 py-2">
-                           <ul class="list-disc pl-5">
-                              {% for g in diagnosa_terakhir.gejala.all %}
-                              <li>{{ g.nama }}</li>
-                              {% empty %}
-                              <li>Tidak ada gejala</li>
-                              {% endfor %}
-                           </ul>
-                        </td>
                         <td class="px-4 py-2">
                            {{ dk.kerusakan.nama_kerusakan }} ({{ dk.akurasi|floatformat:0 }}%)
                         </td>
