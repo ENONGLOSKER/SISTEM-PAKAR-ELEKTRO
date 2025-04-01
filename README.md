@@ -2,8 +2,8 @@
     <h1>SISTEM PAKAR SERVIECE ELEKTRONIK</h1>
     <span>✨⭐⭐⭐✨</span>
     <hr>
-    <img src="home.png"/>
-    <img src="dashboard1.png"/>
+    <img src="./static/img/home.png"/>
+    <img src="./static/img/dashboard1.png"/>
     <br>
 </div>
 

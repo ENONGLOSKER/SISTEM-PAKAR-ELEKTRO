@@ -66,12 +66,11 @@ urlpatterns = [
     path('dashboard/solusi/delete', views.hapus_solusi, name='hapus_solusi'),
     path('dashboard/solusi/delete/multiple', views.hapus_solusi_multiple, name='hapus_solusi_multiple'),
     path('dashboard/solusi/filter/', views.filter_solusi, name='filter_solusi'),
-
+    # api
     path("dashboard/api/jenis-elektronik/", views.get_jenis_elektronik),
     path("dashboard/api/gejala/<int:jenis_id>/", views.get_gejala),
     path("dashboard/api/diagnosa/", views.diagnose),
     path('dashboard/histori/delete/multiple', views.hapus_histori_multiple, name='hapus_histori_multiple'),
-
     path('dashboard/api/visualization/', views.get_visualization_data, name='get_visualization_data'),
     path('dashboard/api/diagnosis-visualization/', views.get_diagnosis_pie_data, name='get_diagnosis_pie_data'),
 ]

@@ -1,0 +1,360 @@
+{%extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div class="flex flex-col rounded-sm text-white bg-gray-50 p-5">
+   <!-- head -->
+   <div class="bg-gray-700 mb-5 p-5 flex justify-between align-middle rounded-lg">
+      <!-- title head -->
+      <div class="flex gap-3 text-left ">
+         <svg width="40" height="40" viewBox="0 0 483 483" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="241.5" cy="241.5" r="241.5" fill="white" />
+            <path
+               d="M242 98C163.151 98 99 162.151 99 241C99 319.849 163.151 384 242 384C320.849 384 385 319.849 385 241C385 162.151 320.849 98 242 98ZM275 307H209V285H275V307ZM308 263H176V241H308V263ZM330 219H154V197H330V219Z"
+               fill="#534AED" />
+         </svg>
+      
+         <h3 class="text-4xl font-semibold">DATA DIAGNOSA KERUSAKAN</h3>
+      </div>
+      <!-- btn -->
+      <div class="flex">
+         <button type="button" onclick="toggleModal(true)"
+            class="text-white bg-[#050708] focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center hover:bg-indigo-500 focus:ring-gray-600 me-2 mb-2 flex gap-2">
+            <svg width="20" height="20" viewBox="0 0 416 416" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path
+                  d="M208 0C93.31 0 0 93.31 0 208C0 322.69 93.31 416 208 416C322.69 416 416 322.69 416 208C416 93.31 322.69 0 208 0ZM304 224H224V304H192V224H112V192H192V112H224V192H304V224Z"
+                  fill="white" />
+            </svg>
+            Add Data
+         </button>
+         
+      </div>
+   </div>
+
+   <!-- filter data -->
+   <div class="flex flex-row-reverse gap-3 align-bottom">
+
+      <button type="button" id="delete_checkbok"
+         class="text-black focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-3 py-2.5 text-center items-center hover:text-red-600 focus:ring-gray-600 me-2 mb-2 flex gap-1">
+         Delete All Check
+      </button>
+   </div>
+
+   <!-- tabel -->
+   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-300">
+         <thead class="text-xl uppercas bg-gray-700 text-indigo-400">
+            <tr>
+               <th scope="col" class="px-6 py-3 text-center">
+                  NO
+               </th>
+               <th scope="col" class="px-6 py-3">
+                  DIAGNOSA
+               </th>
+               <th scope="col" class="px-6 py-3">
+                  KERUSAKAN
+               </th>
+               <th scope="col" class="px-6 py-3 text-center">
+                  AKURASI
+               </th>
+               <th scope="col" class="text-center px-6 py-3 flex justify-center items-center gap-6">
+                  <p>Action</p>
+                  <input id="checkAll" type="checkbox" value=""
+                     class="w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+               </th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for data in diagnosa %}
+            <tr
+               class="border-b bg-gray-800  border-gray-500  hover:bg-gray-600">
+               
+               <td class="px-6 py-4 text-center">
+                  {{forloop.counter}}
+               </td>
+               <td class="px-6 py-4">
+                  {{data.diagnosa}}
+               </td>
+               <td class="px-6 py-4 text-pink-600 font-semibold">
+                  {{data.kerusakan}}
+               </td>
+               <td class="px-6 py-4 text-center">
+                  <span
+                     class=" text-xs font-medium me-2 px-2.5 py-0.5 rounded-md bg-gray-700 text-green-400 border border-green-400">{{data.akurasi}}</span>
+               </td>
+               <td class="text-center px-8 py-4 flex gap-4 items-center justify-center">
+                  <a href="#"
+                     onclick="editGejala('{{ data.id }}', '{{ data.nama }}')"
+                     class="text-indigo-400 hover:text-yellow-400">Edit</a>
+                  <a href="#" onclick="hapusGejala('{{ data.id }}')" class="text-indigo-400 hover:text-red-400">Hapus</a>
+                  <input type="checkbox" value="{{ data.id }}"
+                     class="rowCheckbox w-4 h-4 text-blue-600 opacity-50 focus:opacity-100 rounded-sm focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+</div>
+
+<!-- MODAL -------------------------------------------------------------------------- -->
+<!-- Modal Tambah Gejala -->
+<div id="addGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+   <div class="bg-gray-700 rounded-lg shadow-lg w-96 p-6">
+      <h2 class="text-xl font-bold mb-4">Tambah Gejala</h2>
+      <form id="addGejalaForm">
+         {% csrf_token %}
+         <div class="mb-3 text-slate-700">
+            <label for="nama" class="block text-sm font-medium text-white">Nama Elektronik</label>
+            <input type="text" id="nama" name="nama" required class="w-full p-2 border rounded">
+         </div>
+         <div class="flex justify-end gap-2">
+            <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+         </div>
+      </form>
+   </div>
+</div>
+<!-- Modal Edit Gejala -->
+<div id="editGejalaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+   <div class="bg-gray-700  text-gray-800 rounded-lg shadow-lg w-96 p-6">
+      <h2 class="text-xl font-bold mb-4">Edit Gejala</h2>
+      <form id="editGejalaForm">
+         {% csrf_token %}
+         <input type="hidden" id="edit_id" name="id">
+         <div class="mb-3">
+            <label for="edit_nama" class="block text-white text-sm font-medium">Nama Elektronik</label>
+            <input type="text" id="edit_nama" name="nama" required class="w-full p-2 border rounded">
+         </div>
+         <div class="flex justify-end gap-2">
+            <button type="button" onclick="toggleEditModal(false)" class="px-4 py-2 bg-gray-400 rounded">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+         </div>
+      </form>
+   </div>
+</div>
+<!-- NOTIF -------------------------------------------------------------------------- -->
+<!-- notif -->
+{% if messages %}
+<div class="fixed top-5 right-5 z-50">
+   {% for message in messages %}
+   {% if message.tags == 'success' %}
+   <div id="toast-success"
+      class="flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow-sm text-green-900 bg-green-500"
+      role="alert">
+      <div
+         class="inline-flex items-center justify-center shrink-0 w-8 h-8 rounded-lg bg-green-800 text-green-200">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+               d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+         </svg>
+         <span class="sr-only">Check icon</span>
+      </div>
+      <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+      <button type="button"
+         class="ms-auto -mx-1.5 -my-1.5  rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-green-500 hover:bg-gray-700"
+         data-dismiss-target="#toast-success" aria-label="Close">
+         <span class="sr-only">Close</span>
+         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+         </svg>
+      </button>
+   </div>
+   {% elif message.tags == 'error' %}
+   <div id="toast-danger"
+      class="flex items-center w-full max-w-xs p-4 mb-4  rounded-lg shadow-sm text-red-900 bg-red-500"
+      role="alert">
+      <div
+         class="inline-flex items-center justify-center shrink-0 w-8 h-8  rounded-lg bg-red-800 text-red-200">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+               d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+         </svg>
+         <span class="sr-only">Error icon</span>
+      </div>
+      <div class="ms-3 text-sm font-semibold">{{ message }}</div>
+      <button type="button"
+         class="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-gray-800 hover:bg-gray-700"
+         data-dismiss-target="#toast-danger" aria-label="Close">
+         <span class="sr-only">Close</span>
+         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+         </svg>
+      </button>
+   </div>
+   {% endif %}
+   {% endfor %}
+</div>
+{% endif %}
+</div>
+
+{% endblock content %}
+
+<!-- SCRIPT ============================================================================ -->
+{% block script %}
+<!-- add data -->
+<script>
+   function toggleModal(show) {
+      document.getElementById("addGejalaModal").classList.toggle("hidden", !show);
+   }
+
+   document.getElementById("addGejalaForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Mencegah reload
+      let formData = new FormData(this);
+
+      fetch("{% url 'tambah_jenis' %}", {
+         method: "POST",
+         body: formData,
+         headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+         }
+      })
+         .then(response => response.json())
+         .then(data => {
+            if (data.status === "success") {
+               toggleModal(false);
+               location.reload(); // Refresh halaman untuk melihat data baru
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- hapus data -->
+<script>
+   function hapusGejala(id) {
+      if (confirm("Apakah Anda yakin ingin menghapus jenis ini?")) {
+         fetch("{% url 'hapus_jenis' %}", {
+            method: "POST",
+            body: JSON.stringify({ "id": id }),
+            headers: {
+               "X-CSRFToken": "{{ csrf_token }}",
+               "Content-Type": "application/json"
+            }
+         })
+            .then(response => response.json())
+            .then(data => {
+               if (data.status === "success") {
+                  location.reload();
+               }
+            })
+            .catch(error => console.error("Error:", error));
+      }
+   }
+</script>
+<!-- edit data -->
+<script>
+   function toggleEditModal(show) {
+      document.getElementById("editGejalaModal").classList.toggle("hidden", !show);
+   }
+
+   function editGejala(id, nama) {
+      document.getElementById("edit_id").value = id;
+      document.getElementById("edit_nama").value = nama;
+      toggleEditModal(true);
+   }
+
+   document.getElementById("editGejalaForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+
+      fetch("{% url 'edit_jenis' %}", {
+         method: "POST",
+         body: formData,
+         headers: { "X-CSRFToken": "{{ csrf_token }}" }
+      })
+         .then(response => response.json())
+         .then(data => {
+            if (data.status === "success") {
+               toggleEditModal(false);
+               location.reload();
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- multipel delete -->
+<script>
+   // Select/Deselect All
+   document.getElementById("checkAll").addEventListener("change", function () {
+      const checkboxes = document.querySelectorAll(".rowCheckbox");
+      checkboxes.forEach(checkbox => {
+         checkbox.checked = this.checked;
+      });
+   });
+
+   // Handle Delete Action
+   document.getElementById("delete_checkbok").addEventListener("click", function () {
+      const selectedIds = Array.from(document.querySelectorAll(".rowCheckbox:checked"))
+         .map(checkbox => checkbox.value);
+
+      if (selectedIds.length === 0) {
+         alert("Pilih data yang ingin dihapus!");
+         return;
+      }
+
+      if (!confirm("Apakah Anda yakin ingin menghapus data yang dipilih?")) {
+         return;
+      }
+
+      // AJAX Request
+      fetch("{% url 'hapus_jenis_multiple' %}", {
+         method: "POST",
+         headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+         },
+         body: JSON.stringify({ ids: selectedIds })
+      })
+         .then(response => {
+            if (response.ok) {
+               window.location.reload(); // Reload page
+            } else {
+               alert("Terjadi kesalahan saat menghapus data.");
+            }
+         })
+         .catch(error => console.error("Error:", error));
+   });
+</script>
+<!-- NOTIFIKASI  -->
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+      // Fungsi untuk menghapus elemen toast
+      function removeToast(toast) {
+         toast.style.transition = "opacity 0.5s ease-out";
+         toast.style.opacity = "0";
+         setTimeout(() => toast.remove(), 500); // Hapus dari DOM setelah efek fade-out
+      }
+
+      // Hapus pesan otomatis setelah 300 detik (300000 ms)
+      setTimeout(function () {
+         let toasts = document.querySelectorAll(".fixed.top-5.right-5.z-50 > div");
+         toasts.forEach(removeToast);
+      }, 3000);
+
+      // Event listener untuk tombol close
+      document.querySelectorAll("[data-dismiss-target]").forEach(button => {
+         button.addEventListener("click", function () {
+            let toast = this.closest("div[role='alert']");
+            if (toast) {
+               removeToast(toast);
+            }
+         });
+      });
+   });
+</script>
+<!-- MODAL -->
+<script>
+   function showImportModal() {
+      document.getElementById('import-modal').classList.remove('hidden');
+      document.getElementById('import-modal').classList.add('flex');
+   }
+
+   function hideImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+      document.getElementById('import-modal').classList.remove('flex');
+   }
+</script>
+{% endblock script %}

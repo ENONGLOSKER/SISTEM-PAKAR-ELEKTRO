@@ -58,10 +58,10 @@ class Diagnosa(models.Model):
 class DiagnosaKerusakan(models.Model):
     diagnosa = models.ForeignKey(Diagnosa, on_delete=models.CASCADE, related_name='diagnosa_kerusakan')
     kerusakan = models.ForeignKey('Kerusakan', on_delete=models.CASCADE)
-    akurasi = models.FloatField(default=0.0)  # Dalam persen (0-100)
+    akurasi = models.FloatField(default=0.0)  
 
     class Meta:
-        unique_together = ('diagnosa', 'kerusakan')  # Pastikan tidak ada duplikat
+        unique_together = ('diagnosa', 'kerusakan') 
 
     def __str__(self):
         return f"{self.diagnosa} - {self.kerusakan} ({self.akurasi}%)"

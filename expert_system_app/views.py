@@ -1,18 +1,51 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
 from .models import JenisElektronik, Gejala, Kerusakan, Aturan, Diagnosa,DiagnosaKerusakan, Solusi
+from django.db import models
+from django.db.models import Count
+from django.http import JsonResponse
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import pandas as pd
-from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
-import json
-from django.db.models import Count
 from datetime import datetime, timedelta
-from django.db import models
 
+def index(request):
+    return render(request, 'index.html')
+
+# DASHBOARD ==================================
+@login_required()
+def dashboard(request):
+    jenis = JenisElektronik.objects.count()
+    gejala = Gejala.objects.count()
+    kerusakan = Kerusakan.objects.count()
+    aturan = Aturan.objects.count()
+    solusi = Solusi.objects.count()
+
+    diagnosa = Diagnosa.objects.all()
+    diagnosa_terakhir = Diagnosa.objects.order_by('-tanggal_diagnosa').first()
+
+    # Hitung akurasi rata-rata dari DiagnosaKerusakan
+    akurasi_rata_rata = 0
+    if diagnosa_terakhir:
+        akurasi_values = diagnosa_terakhir.diagnosa_kerusakan.values_list('akurasi', flat=True)
+        akurasi_rata_rata = sum(akurasi_values) / len(akurasi_values) if akurasi_values else 0
+
+    context = {
+        'jenis_count': jenis,
+        'gejala_count': gejala,
+        'kerusakan_count': kerusakan,
+        'kerusakan_count': kerusakan,
+        'aturan_count': aturan,
+        'solusi_count': solusi,
+        'diagnosa': diagnosa,
+        'diagnosa_terakhir': diagnosa_terakhir,
+        'akurasi_rata_rata': akurasi_rata_rata,
+    }
+    return render(request, 'dashboard.html', context)
+# VISUALISASI DATA GRAFIK 
 def get_diagnosis_pie_data(request):
     # Hitung jumlah diagnosa untuk setiap jenis elektronik
     diagnosis_data = (
@@ -29,7 +62,6 @@ def get_diagnosis_pie_data(request):
         "labels": labels,
         "data": data
     })
-
 def get_visualization_data(request):
     # Hitung jumlah masing-masing kategori
     jenis_count = JenisElektronik.objects.count()
@@ -42,16 +74,13 @@ def get_visualization_data(request):
         "gejala": gejala_count,
         "kerusakan": kerusakan_count
     })
-
-# DIAGNOSIS ==================================
+# DIAGNOSIS 
 def get_jenis_elektronik(request):
     jenis_list = JenisElektronik.objects.all().values("id", "nama")
     return JsonResponse(list(jenis_list), safe=False)
-
 def get_gejala(request, jenis_id):
     gejala_list = Gejala.objects.filter(jenis_elektronik_id=jenis_id).values("id", "nama")
     return JsonResponse(list(gejala_list), safe=False)
-
 @csrf_exempt
 def diagnose(request):
     if request.method == "POST":
@@ -59,7 +88,6 @@ def diagnose(request):
         jenis_id = data.get("jenis_id")
         gejala_ids = data.get("gejala", [])
 
-        # Validasi input
         if not jenis_id or not gejala_ids:
             return JsonResponse({"error": "Jenis elektronik dan gejala harus dipilih"}, status=400)
 
@@ -522,7 +550,6 @@ def get_gejala_kerusakan(request):
         return JsonResponse({"gejalas": list(gejalas), "kerusakans": list(kerusakans)})
 
     return JsonResponse({"gejalas": [], "kerusakans": []})
-
 def get_aturan(request, aturan_id):
     aturan = get_object_or_404(Aturan, id=aturan_id)
     data = {
@@ -682,7 +709,6 @@ def dsb_solusi(request):
         'kerusakan': kerusakan,
     }
     return render(request, 'dsb_solusi.html', context)
-
 @login_required
 def edit_solusi(request, id):
     solusi = get_object_or_404(Solusi, id=id)
@@ -725,7 +751,6 @@ def edit_solusi(request, id):
             return JsonResponse({"status": "error", "message": f"Terjadi kesalahan: {str(e)}"}, status=500)
 
     return JsonResponse({"status": "error", "message": "Metode tidak diizinkan"}, status=405)
-
 @login_required
 def tambah_solusi(request):
     if request.method == "POST":
@@ -819,56 +844,8 @@ def filter_solusi(request):
         })
 
     return JsonResponse({'solusi': data})
-def index(request):
-    return render(request, 'index.html')
-@login_required()
-def dashboard(request):
-    jenis = JenisElektronik.objects.count()
-    gejala = Gejala.objects.count()
-    kerusakan = Kerusakan.objects.count()
-    aturan = Aturan.objects.count()
-    solusi = Solusi.objects.count()
 
-    diagnosa = Diagnosa.objects.all()
-    diagnosa_terakhir = Diagnosa.objects.order_by('-tanggal_diagnosa').first()
-
-    # Hitung akurasi rata-rata dari DiagnosaKerusakan
-    akurasi_rata_rata = 0
-    if diagnosa_terakhir:
-        akurasi_values = diagnosa_terakhir.diagnosa_kerusakan.values_list('akurasi', flat=True)
-        akurasi_rata_rata = sum(akurasi_values) / len(akurasi_values) if akurasi_values else 0
-
-    context = {
-        'jenis_count': jenis,
-        'gejala_count': gejala,
-        'kerusakan_count': kerusakan,
-        'kerusakan_count': kerusakan,
-        'aturan_count': aturan,
-        'solusi_count': solusi,
-        'diagnosa': diagnosa,
-        'diagnosa_terakhir': diagnosa_terakhir,
-        'akurasi_rata_rata': akurasi_rata_rata,
-    }
-    return render(request, 'dashboard.html', context)
-
-def base(request):
-    # Hitung jumlah data dalam setiap model
-    jenis = JenisElektronik.objects.count()
-    gejala = Gejala.objects.count()
-    kerusakan = Kerusakan.objects.count()
-    aturan = Aturan.objects.count()
-    print('data mek ni', jenis)
-
-    # Sertakan data tersebut dalam konteks
-    context = {
-        'jenis_count': jenis,
-        'gejala_count': gejala,
-        'kerusakan_count': kerusakan,
-        'aturan_count': aturan
-    }
-
-    return render(request, 'base.html', context)
-
+# AUTH =====================================
 def signin_form(request):
     if request.method == "POST":
         username = request.POST.get("username")
